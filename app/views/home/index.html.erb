@@ -1,0 +1,85 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 offset-md-6 text-right">
+			<%= link_to "<i class='fa fa-id-card-alt' aria-hidden='true'></i> Sobre nosotros".html_safe, "https://lwr.org/about-lwr", class: "btn btn-outline-primary", target: "_blanck" %>
+			<%= link_to "<i class='fa fa-envelope-open' aria-hidden='true'></i> Contactanos".html_safe, "https://lwr.org/contact-us", class: "btn btn-outline-primary", target: "_blanck" %>
+
+			<% if user_signed_in? %>
+				<%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Salir".html_safe, destroy_user_session_path, method: :delete, class: "btn btn-outline-primary" %>
+				<%= link_to "<i class='fa fa-user'></i> Perfil".html_safe, edit_user_home_index_path, class: "btn btn-outline-primary", remote: true %>
+			<% end %>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 offset-md-4 text-center">
+			<br>
+			<%= image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid") %>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<br><br>	
+	<h4 class="text-center"><b>CAJA DE HERRAMIENTAS DE GÉNERO</b></h4>
+	<h6 class="text-center"><i>¡Construyendo comunidades equitativas y prósperas!</i></h6>
+	<br>
+	<p class="text-justify" style="font-size: 14px; text-align: justify !important;">Descubre cómo ha avanzado tu organización en temas de equidad de género e igualdad de oportunidades para las mujeres. Realiza un sencillo diagnóstico que podrá darte un panorama más claro de donde debes enfocar esfuerzos para que tu organización logre un progreso importante en temáticas de guia basada en 4 principales indicadores.</p>
+	<br><br>
+</div>
+
+<% if user_signed_in? %>
+	<div class="container">
+		<div class="row">
+			<%- @surveys.each_with_index do |s, index | %>
+				<div class="col-md-6 survey-item hvr-pulse">
+			    <div class="row no-gutters border overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-ligthgray">
+			    	<div class="col-md-4 d-none d-lg-block text-center">
+			    		<%= image_tag("survey.png", alt:"Icono de encuesta", class:"img-fluid") %>
+			        <!--<h1 class="survey-img darkblue-color text-right"><i class="fas fa-clipboard-list"></i></h1>-->
+			      </div>
+			      <div class="col-md-8 p-4 d-flex flex-column position-static">
+			        <strong class="d-inline-block mb-2 darkblue-color"><%= index+1 %> <%= s.code %>	</strong>
+			        <h4 class="mb-0"><%= s.name %></h4>
+			        <br>
+			        <div class="text-muted">
+			        	<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Realizar encuesta'), home_path(s.id),  class:"btn btn-primary" %>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
+		  <% end %>
+		</div>
+	</div>
+<% else %>
+	<div class="container-fluid bg-surveys">
+		<br><br>
+		<h6 class="text-center aqua-color"><b>Debes iniciar sesión para responder las encuestas</b></h6><br>
+		<div class="col-md-4 offset-md-4 text-center">
+			<%= link_to raw('<i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Iniciar Sesión'), new_user_session_path,  class:"btn btn-primary text-center btn-lg" %>
+		</div>
+		<br><br>
+	</div>
+<% end %>
+
+<div class="container-fluid bg-skin">
+	<br><br>
+	<h3 class="text-center"><b>Guías</b></h3>
+	<p class="text-center" style="font-size: 14px; text-align: center; !important;">Obtén el material de las guías para ponerlos en práctica.</p>
+	<br>
+	<div class="row">
+		<%- @guides.each_with_index do |g, index | %>
+			<div class="col-md-3 text-center">
+				<div class="col-md-8 offset-md-2">
+					<%= link_to image_tag("guide.png", alt:"Icono de guia", class:"img-fluid", title: "Haz click aquí para descargar la guía"), g.file.url, target: "_blank" %>
+				</div>
+				<br>
+				<h5><b><%= g.title %></b></h5>
+				<br>
+				<%= link_to raw('<i class="fas fa-download"></i>&nbsp;&nbsp;Descargar Guía'), g.file.url, class:"btn bg-orange white-color text-center", download: "	#{g.title}" %><br>
+		  </div>
+	  <% end %>
+	</div>
+	<br><br>
+</div>
+<div id="profile_edit"></div>

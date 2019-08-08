@@ -1,0 +1,58 @@
+
+<div class="container">
+	<h4 class="text-center"><b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;Encuestas</b></h4>
+	<h5 class="text-center"><i>Evaluación y Seguimiento</i></h5>
+	<br>
+	<div class="col-md-4 offset-md-4 text-center">
+		<%= link_to raw('<i class="fas fa-plus-circle"></i>&nbsp;Crear Encuesta'), new_admin_survey_path, class: "btn btn-primary", title:"Crear una nueva encuesta" %>
+	</div>
+</div>
+<br>
+<div class="container">
+	<table class="datatable table table-responsive">
+		<thead class="container-fluid">
+			<tr class="bg-aqua">
+				<th width="10%" class="text-center white-color">N°</th>
+				<th width="10%" class="text-center white-color">Código</th>
+				<th width="40%" class="text-left white-color">Nombre de la encuesta</th>
+				<th width="20%" class="text-center white-color">Estado</th>
+				<th width="20%" class="text-center white-color">Fecha de creación</th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<%- @surveys.each_with_index do |s,index| %>
+				<tr>
+					<td class="text-center"><%= index+1 %></td>
+					<td class="text-center"><%= s.code rescue "" %></td>
+					<td><%= s.name rescue "" %></td>
+					<td class="text-center"><%= s.status == true ? 'Publicada' : 'Oculta' %></td>
+					<td class="text-center"><%= s.created_at.strftime("%d-%m-%Y") %></td>
+					<td><%= link_to "<i class='fas fa-edit'></i>".html_safe, edit_admin_survey_path(s), class: "btn btn-edit" %></td>
+					<td><%= link_to "<i class='fas fa-trash-alt' aria-hidden='true'></i>".html_safe, admin_survey_path(s), method: :delete, data: {:confirm => "¿Esta seguro de eliminar?" } , class: "btn btn-cancel"%></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>
+<br><br><br>
+<script type="text/javascript">
+	$(document).ready(function() {
+	   $(".datatable").DataTable({
+      "language": {
+        "lengthMenu": "Registros por página _MENU_",
+        "zeroRecords": "Registros no encontrados.",
+        "info": "Página _PAGE_ de _PAGES_",
+        "infoEmpty": "No hay registros.",
+        "infoFiltered": "(Filtrado de _MAX_ total de registros.)",
+        "search": "_INPUT_",
+      	"searchPlaceholder": "Buscar...",
+        "paginate": {
+		      "previous": "Anterior",
+		      "next": "Siguiente"
+		    }
+		  }
+  	});
+	} );
+</script>

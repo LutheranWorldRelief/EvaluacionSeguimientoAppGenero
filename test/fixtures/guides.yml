@@ -1,0 +1,23 @@
+# == Schema Information
+#
+# Table name: guides
+#
+#  id         :bigint           not null, primary key
+#  title      :string
+#  file       :string
+#  status     :boolean
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  file: MyString
+  status: false
+
+two:
+  title: MyString
+  file: MyString
+  status: false

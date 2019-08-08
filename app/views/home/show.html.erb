@@ -1,0 +1,148 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 offset-md-6 text-right">
+			<%= link_to "<i class='fa fa-id-card-alt' aria-hidden='true'></i> Sobre nosotros".html_safe, "https://lwr.org/about-lwr", class: "btn btn-outline-primary", target: "_blanck" %>
+			<%= link_to "<i class='fa fa-envelope-open' aria-hidden='true'></i> Contactanos".html_safe, "https://lwr.org/contact-us", class: "btn btn-outline-primary", target: "_blanck" %>
+
+			<% if user_signed_in? %>
+				<%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Salir".html_safe, destroy_user_session_path, method: :delete, class: "btn btn-outline-primary" %>
+			<% end %>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4">
+			<br><br>
+			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Regresar'), home_index_path, class: "btn btn-secondary", title:"Regresar a todas las encuestas" %>
+		</div>
+		<div class="col-md-4 text-center">
+			<br>
+			<%= image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid") %>
+		</div>
+	</div>
+</div>
+<div class="container" >
+	<div class="text-center">
+		<br><br>
+		<h4>
+			<b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= @surveys.name %></b>
+		</h4>
+		<br>
+	</div>
+	<%= @surveys.indications.html_safe rescue "" %>
+	<br>
+	<!-- Listado de secciones -->
+	<%= form_tag insert_data_home_path, id: "survey#{@surveys.id}",  method: :post do %>
+		<div class="col-md-6 offset-md-3 text-center">
+			<%= hidden_field_tag 'user_email', current_user.email %>
+			<%= hidden_field_tag 'survey', @surveys.id %>
+		</div>
+		<br>
+		<table class="table">
+			<tbody>
+				<tr>
+					<th class="bg-aqua white-color survey_header col-12 text-center" colspan="4	"><h4>Cuestionario</h4></th>
+				</tr>
+					<% @surveys.sections.order('id ASC').each  do |s| %>
+					<tr id="<%= "section#{s.id}" %>">
+						<td class="col-12 bd-lightblue2 survey_section" colspan="4	"><b><%= s.name %></b></td>
+					</tr>
+						<% s.questions.order('id ASC').each_with_index do |q,index| %>
+							<tr class="<%= "question#{s.id}" %>">
+								<td width="50" class="text-center"><%= @surveys.code %>.<%= index+1 %></td>
+								<td width="600" class="text-justify"><%= q.question.html_safe rescue "" %></td>
+								<td width="120" class="text-center bg-skin">
+									<% case q.question_type %>
+									<% when "Número" %>
+										<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
+										<%= hidden_field_tag 'question_id[]', q.id %>
+
+									<% when "Moneda" %>
+										<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
+										<%= hidden_field_tag 'question_id[]', q.id %>
+
+									<% when "Checkbox No data" %>
+										<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{q.id}" %>
+
+										<%= hidden_field_tag 'answer_question[]', 'Data', id:"checkboxHide#{q.id}" %>
+										<%= hidden_field_tag 'question_id[]', q.id %>
+
+									<% when "Checkbox" %>
+										<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{q.id}" %>
+										<%= hidden_field_tag 'answer_question[]', 'No confirm', id:"checkboxValue#{q.id}" %>
+										<%= hidden_field_tag 'question_id[]', q.id %>
+
+									<% when "Decimal" %>
+										<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
+										<%= hidden_field_tag 'question_id[]', q.id %>
+
+									<% when "Rango de Numeros" %>								
+										<%= number_field_tag 'answer_question[]', {:value=>''}, class: "form-control text-center input-range", id: "rangevalue#{q.id}", readonly: "readonly" %>
+										<div id="<%= "range#{q.id}" %>" class="range"></div>
+										<%= hidden_field_tag 'question_id[]', q.id %>
+									<% else %>
+										NO se ha asignado
+									<% end %>
+								</td>
+							</tr>
+							<script type="text/javascript">
+								$(document).ready(function(){
+									$("#<%= "checkboxNoData#{q.id}" %>").change(function(){
+							     	if($(this).prop('checked')){
+							        $("#<%= "checkboxHide#{q.id}" %>").val('No data');
+							        $(".<%= "input_#{s.id}" %>:input").prop("readonly", true);
+							      	$(".<%= "input_#{s.id}" %>:input").val('0');
+							     	}else{
+							        $("#<%= "checkboxHide#{q.id}" %>").val('Data');
+							        $(".<%= "input_#{s.id}" %>:input").prop("readonly", false);
+							     	}
+									});
+
+									$("#<%= "checkboxConfirm#{q.id}" %>").change(function(){
+							     	if($(this).prop('checked')){
+							        $("#<%= "checkboxValue#{q.id}" %>").val('Confirm');
+							        $(".<%= "input_#{s.id}" %>:input").prop("readonly", true);
+							      	$(".<%= "input_#{s.id}" %>:input").val('0');
+							     	}else{
+							        $("#<%= "checkboxValue#{q.id}" %>").val('No confirm');
+							        $(".<%= "input_#{s.id}" %>:input").prop("readonly", false);
+							     	}
+									});
+									
+									$("#checkboxConfirm66").change(function(){
+										if($(this).prop('checked')){
+							        $("#section20").hide();
+							        $(".question20").hide();
+							        $(".<%= "input_#{19}" %>:input").val('0');
+							     	}else{
+							        $("#section20").show();
+							        $(".question20").show();
+							     	}
+									});	
+
+									$(".val").attr('id',"<%= "val#{q.id}" %>");
+
+									$( "#<%= "range#{q.id}" %>" ).slider({
+							      range: "max",
+							      min: 1,
+							      max: 5,
+							      value: 3,
+							      slide: function( event, ui ) {
+							        $( "#<%= "rangevalue#{q.id}" %>" ).val( ui.value );
+							      }
+							    });
+							    $( "#<%= "rangevalue#{q.id}" %>" ).val( $( "#<%= "range#{q.id}" %>" ).slider( "value" ) );
+								});
+							</script>
+						<% end %>
+					<% end %>
+			</tbody>
+		</table>
+		<br>
+		<div class="col-md-4 offset-md-4 text-center">
+			<%= submit_tag "Guardar Datos", class: 'btn btn-primary', disabled: false %>
+		</div>
+	<% end %>
+</div>
+<br><br>

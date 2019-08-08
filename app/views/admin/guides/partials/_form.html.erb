@@ -1,0 +1,22 @@
+<div class="row">
+	<!-- Título de la guía -->
+	<div class="col-md-3">
+		<%= f.input :title, label: "1. Título o nombre de la guía:", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter'}, placeholder: "Escribir título o nombre de la guía", required: "required" %>
+		<br>
+	</div>
+	<!-- Archivo de la guía -->
+	<div class="col-md-6">
+		<%= f.input :file, as: :file, label: "2. Archivo:", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter', accept: 'application/pdf'}, placeholder: "Adjuntar archivo", required: "required" %>
+		<br>
+	</div>
+	<!-- Estado de la encuesta -->
+	<div class="col-md-3 text-center">
+		<%= f.label :status, label:"3. Estado:", class: "label-input text-left" %><br />
+		<%= f.label :status, "Publicar", :value => "Publicar"  %>
+		<%= f.radio_button :status, "true", checked:true, required: "required", class: "bg-green" %>&nbsp;&nbsp;
+		<%= f.label :status, "Ocultar", :value => "Ocultar" %>
+		<%= f.radio_button :status, "false" %>
+		<br>
+	</div>
+</div>
+<br>

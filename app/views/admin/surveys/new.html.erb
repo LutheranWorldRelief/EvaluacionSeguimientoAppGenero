@@ -1,0 +1,20 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-4">
+			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;Regresar'), admin_surveys_path, class: "btn btn-secondary", title:"Regresar a todas las encuestas" %>
+		</div>
+		<div class="col-md-4">
+			<h4 class="text-center"><b><i class="fas fa-clipboard-list"></i></b>&nbsp;Nueva Encuesta</h4>
+		</div>
+	</div>
+	<br>
+	<%= simple_form_for [:admin, @surveys] do |f| %>
+		<br>
+		<%= render partial: "admin/surveys/partials/form", locals: { f: f } %>
+		<div class="text-center">
+			<%= f.submit ("Guardar encuesta") , class: "btn btn-primary", title: "Guardar datos" %>
+    	<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;Regresar'), admin_surveys_path, class: "btn btn-secondary", title:"Regresar a todas las encuestas" %>
+		</div>
+		<br>
+	<% end %>
+</div>

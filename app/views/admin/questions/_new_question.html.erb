@@ -1,0 +1,49 @@
+<%= simple_form_for [:admin, @question] do |f| %>
+  <div class="modal-header">
+    <h5 class="modal-title text-center darkblue-color" id="exampleModalLabel"><br><b><i class="fas fa-question-circle"></i>&nbsp;&nbsp; CREAR PREGUNTA</b></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <!-- Pregunta -->
+        <div class="col-12">
+          <br>
+          <%= f.input :question, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "1. Redactar pregunta:", label_html: {class: 'label-input'} %>
+        </div>
+        <!-- Tipo de pregunta -->
+        <div class="col-12 col-md-6">
+          <br>
+          <%= f.input :question_type, priority: [ "Número" ], collection: [ "Número", "Moneda", "Decimal", "Checkbox", "Checkbox No data", "Radio Button", "Texto", "Multitexto", "Rango de Numeros" ], label: "2. Tipo de respuesta de la pregunta:", label_html: { class: 'label-input'}, input_html: { class: "select2 form-control col-md-12"}, prompt: "-- Seleccione una opción --", required: "required"%>
+        </div>
+        <!-- Sección a la que pertenece -->
+        <div class="col-12 col-md-6">
+          <br>
+          <%= f.input :section_id, collection: Section.where(survey_id: params[:id]).all.map { |s| ["#{s.name}", s.id]}, label: "3. Seleccionar sección a la que pertenece:", label_html: { class: 'label-input'}, input_html: { class: "select2 form-control col-md-12"}, prompt: "-- Seleccione una sección --", required: "required"%>
+        </div>
+        <!-- Estado de la pregunta -->
+        <div class="col-md-6 text-left">
+          <br>
+          <%= f.label :status, label:"4. Estado:", class: "label-input text-left" %><br />
+          <%= f.label :status, "Publicar", :value => "Publicar"  %>
+          <%= f.radio_button :status, "true", checked:true, required: "required", class: "bg-green" %>&nbsp;&nbsp;
+          <%= f.label :status, "Ocultar", :value => "Ocultar" %>
+          <%= f.radio_button :status, "false" %>
+          <br>
+        </div>
+        <br>
+        <div class="col-12">
+          <br>
+          <%= f.input :recommendation, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "5. Mensaje de recomendación", label_html: {class: 'label-input'} %>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+    <%= f.submit ("Guardar pregunta") , class: "btn btn-primary", title: "Guardar datos" %>
+  </div>
+<% end %>

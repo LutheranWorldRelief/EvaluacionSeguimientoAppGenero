@@ -1,0 +1,44 @@
+<div class="row">
+	<!-- Nombre de la encuesta -->
+	<div class="col-md-3">
+		<%= f.input :code, label: "1. Código:", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter'}, placeholder: "Escribir código", required: "required" %>
+		<br>
+	</div>
+	<!-- Nombre de la encuesta -->
+	<div class="col-md-6">
+		<%= f.input :name, label: "2. Nombre de la encuesta:", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter'}, placeholder: "Escribir nombre de la encuesta", required: "required" %>
+		<br>
+	</div>
+	<!-- Estado de la encuesta -->
+	<div class="col-md-3 text-center">
+		<%= f.label :status, label:"3. Estado:", class: "label-input text-left" %><br />
+		<%= f.label :status, "Publicar", :value => "Publicar"  %>
+		<%= f.radio_button :status, "true", checked:true, required: "required", class: "bg-green" %>&nbsp;&nbsp;
+		<%= f.label :status, "Ocultar", :value => "Ocultar" %>
+		<%= f.radio_button :status, "false" %>
+		<br>
+	</div>
+	<!-- Indicaciones de la encuesta -->
+	<div class="col-12">
+		<br>
+		<%= f.input :indications, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "4. Indicaciones de la encuesta:", label_html: {class: 'label-input'}, required: "required" %>
+	</div>
+	<br>
+	<!-- Recomendaciones de la encuesta -->
+	<div class="col-12">
+		<br>
+		<%= f.input :recommendation_one, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "5. Recomendacion general 1 - Positivo", label_html: {class: 'label-input'} %>
+	</div>
+	<br>
+	<div class="col-12">
+		<br>
+		<%= f.input :recommendation_two, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "6. Recomendacion general 2 - Necesita mejorar", label_html: {class: 'label-input'} %>
+	</div>
+	<br>
+	<div class="col-12">
+		<br>
+		<%= f.input :advice_message, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "7. Mensaje de advertencia general", label_html: {class: 'label-input'} %>
+	</div>
+	<br>
+</div>
+<br>

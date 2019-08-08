@@ -1,0 +1,88 @@
+// Place all the styles related to the surveys controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+// Body and Main section container
+	
+	body { font-family: 'Helvetica' !important; }
+	.main-container { margin-top: 2rem; padding-left: 0 !important; padding-right: 0 !important;	}
+	a { text-decoration: none !important; }
+	.survey-item { border-radius: 0px !important; }
+	.survey_header { text-transform: uppercase !important; }
+	.survey_section { text-transform: uppercase !important; }
+	.answer-icons { width: 150px; }
+	.gray-img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: gray !important; }
+	.div-gray-img > img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: gray !important; }
+	.bg-surveys { background-image: url(asset_path("LWRBanner.jpg")); background-repeat: no-repeat; background-size: 100%; height: 500px; }
+
+// Background colors and font colors
+	.bg-green { background-color: #c3cf21 !important; }
+	.bg-aqua { background-color: #00a9a7 !important; }
+	.bg-darkblue { background-color: #1E4051; }
+	.bg-lightblue { background-color: #37abc8 !important; }
+	.bg-ligthgray { background-color: rgba(212,212,212, 0.6); }
+	.bd-lightblue2 { background-color: #D9E8EE; }
+	.bg-skin { background-color: #EEEBC1; }
+	.bg-orange { background-color: #FFC100; }
+	.bg-darkpurple { background-color: #3A425D; }
+	.bg-gray { background-color: #dcdcdc; }
+	.white-color { color: #fff !important;  }
+	.green-color { color: #c3cf21 !important;  }
+	.aqua-color { color: #00a9a7 !important;  }
+	.orange-color { color: #FFC100; }
+	.darkblue-color { color: #1E4051 !important; }
+	.lightblue-color { color: #37abc8 !important; }
+	.lightgray-color { color: #D4D4D4; }
+	.darkpurple-color { color: #3A425D; }
+	.gray-color { color: #dcdcdc; }
+
+// Button styles
+
+	.btn { border-radius: 0px !important; border: 0px !important; }
+	.btn-primary { background-color: #00a9a7 !important; color: #fff !important; }
+	.btn-primary:hover { background-color: #c3cf21 !important; }
+	.btn-outline-primary { color: #1E4051 !important; font-size: 15px !important; }
+	.btn-outline-primary:hover { background-color: #c3cf21 !important; color: #fff !important; }
+	
+
+// Messages
+
+	.welcome-msg { margin-top: 1rem !important; }
+
+// Tables
+
+	.table { width: 100% !important; }
+	th { font-size: 15px; }
+	.dataTables_length { font-size:14px; }
+	.table th { padding: 0.8rem 1rem !important; }
+	.table td { padding: 0.5rem 1rem !important; font-size: 14px; }
+
+// Images and Icons
+	.survey-img { font-size: 10rem; }
+
+// Footer
+	footer { padding-top: 1rem !important; border-top: 3px solid #3A425D; position: relative; bottom: 0; width: 100%; }
+	footer p { font-size: 14px; }
+
+// Forms
+	.form-control { border-radius: 0px !important; font-size: 15px !important; }
+	.form-control-checkbox { height: calc(1rem + 2px) !important; }
+	.form-control-checkbox:focus { box-shadow: none !important; }
+	.padding-none { padding: 0px !important; }
+	.margin-none { margin: 0px !important; }
+	.label-input { font-weight: bold; font-size: 14px !important; }
+	.input-range { border: 0px !important; background-color: #EEEBC1 !important; color: #1E4051 !important; font-size: 16px; font-weight: bold; }
+
+// Modals
+	.modal-dialog { max-width: 100% !important; }
+	.modal-title { width: 100% !important; }
+	.modal-content { border-radius: 0 !important; }
+
+// Grafics
+	g rect:nth-child(2) { fill: #31b5b5 !important; }
+
+	.selected-flag { width: 110px !important; }
+
+	.ui-widget-content { background: #c3cf21; }
+	.range .ui-slider-handle { background: #00a9a7; }
+	.range .ui-slider-range { background: #fff; }

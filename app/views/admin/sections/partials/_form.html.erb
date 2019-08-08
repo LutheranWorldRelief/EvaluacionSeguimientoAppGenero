@@ -1,0 +1,46 @@
+<div class="row">
+  <!-- Nombre de la encuesta -->
+        <div class="col-md-6 text-left">
+          <%= f.input :name, label: "1. Nombre de la sección:", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter'}, placeholder: "Escribir nombre de la sección", required: "required" %>
+          <br>
+        </div>
+        <!-- Porcentaje de la encuesta -->
+        <div class="col-md-3 text-left">
+          <%= f.input :gap_porcent, label:"2. BRECHA Ideal (%):", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter text-center', min:1, max: 99}, placeholder: "%" %>
+        </div>
+        <br>
+        <!-- Porcentaje de la encuesta -->
+        <div class="col-md-3 text-left">
+          <%= f.input :gap_max, label:"3. BRECHA Maxima (%):", label_html: { class: 'label-input'}, input_html: {class: 'col-md-12 form-control only-letter text-center', min:1, max: 99}, placeholder: "%" %>
+        </div>
+        <br>
+        <div class="col-12">
+          <br>
+          <%= f.input :recommendation, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "4. Mensaje de recomendación", label_html: {class: 'label-input'} %>
+        </div>
+        <br>
+        <div class="col-12">
+          <br>
+          <%= f.input :recommendation_negative, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "5. Mensaje de recomendación (Brecha negativa)", label_html: {class: 'label-input'} %>
+        </div>
+        <br>
+        <div class="col-12">
+          <br>
+          <%= f.input :recommendation_gap_max, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "6. Mensaje de recomendación (Sobre pasa el maximo de la brecha)", label_html: {class: 'label-input'} %>
+        </div>
+        <br>
+        <div class="col-12">
+          <br>
+          <%= f.input :recommendation_no_data, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "7. Mensaje de recomendación (Si la organización no lleva registro)", label_html: {class: 'label-input'} %>
+        </div>
+        <!-- Estado de la encuesta -->
+        <div class="col-md-12 text-center">
+          <br>
+          <%= f.label :status, label:"8. Estado:", class: "label-input text-left" %><br />
+          <%= f.label :status, "Publicar", :value => "Publicar"  %>
+          <%= f.radio_button :status, "true", checked:true, required: "required", class: "bg-green" %>&nbsp;&nbsp;
+          <%= f.label :status, "Ocultar", :value => "Ocultar" %>
+          <%= f.radio_button :status, "false" %>
+          <br>
+        </div>
+</div>
