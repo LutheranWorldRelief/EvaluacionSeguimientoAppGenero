@@ -1,4 +1,4 @@
-# EvaluacionSeguimientoAppGenero
+# Evaluacion Seguimiento App Genero
 Gender app project developed for gender equity and equal opportunities for women.
 
 # HOW TO INSTALL
