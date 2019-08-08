@@ -108,7 +108,8 @@ Gender app project developed for gender equity and equal opportunities for women
 
 ### Run database seed for create user administrator
   >
-    1. bundle exec rake db:seed
+    1. open with vim or nano db/seeds.rb and change it with your prefer credentials
+    2. bundle exec rake db:seed
 
 ### Precompile assets, this command precompile all images, javascripts and css
   >
