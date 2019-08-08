@@ -3,6 +3,12 @@ Gender app project developed for gender equity and equal opportunities for women
 
 # HOW TO INSTALL
 
+### Technologies
+  >
+    1. Ruby: 2.5.3
+    2. Rails: 5.2
+    3. Postgresql: 9.3
+
 ### First install Postgresql
 
   > sudo apt install postgresql postgresql-contrib
