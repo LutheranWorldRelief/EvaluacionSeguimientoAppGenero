@@ -18,25 +18,26 @@ class HomeController < ApplicationController
   def insert_data
     #Condition validate if user already has answered the survey
     if Answer.exists?(user_email: params['user_email'], survey: params['survey'])
-      #Destroy all records
-      Answer.where(user_email: params['user_email'], survey: params['survey']).destroy_all
+      #Find the counter
+      counter = Answer.where(user_email: params['user_email'], survey: params['survey']).last.counter
+      get_counter = counter+1;
       #Condition if email is empty
       if params['user_email'].nil? 
         redirect_to home_index_path, alert: "No se puedo ingresar los datos."      
       else
         params['answer_question'].each_with_index do |a, i|
-          Answer.create!({answer_question: a, question_id: params['question_id'][i], user_email: params['user_email'], survey: params['survey']})
+          Answer.create!({answer_question: a, question_id: params['question_id'][i], user_email: params['user_email'], survey: params['survey'], counter: get_counter})
         end
-        redirect_to results_home_path(survey: params['survey'], user_email: params['user_email']), notice: "Datos agregado con éxito."
+        redirect_to results_home_path(survey: params['survey'], user_email: params['user_email'], counter: get_counter), notice: "Datos agregado con éxito."
       end 
     else
       if params['user_email'].nil? 
         redirect_to home_index_path, alert: "No se puedo ingresar los datos."      
       else
         params['answer_question'].each_with_index do |a, i|
-          Answer.create!({answer_question: a, question_id: params['question_id'][i], user_email: params['user_email'], survey: params['survey']})
+          Answer.create!({answer_question: a, question_id: params['question_id'][i], user_email: params['user_email'], survey: params['survey'], counter: 1})
         end
-        redirect_to results_home_path(survey: params['survey'], user_email: params['user_email']), notice: "Datos agregado con éxito."
+        redirect_to results_home_path(survey: params['survey'], user_email: params['user_email'], counter: 1), notice: "Datos agregado con éxito."
       end 
     end
   end
@@ -45,7 +46,13 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.pdf { render pdf: Survey.where(id: params[:survey]).last.name, page_size: 'Letter', print_media_type: true, disable_javascript: false, javascript_delay: 3000, viewport_size: '1280x1024' }
+      format.pdf { render pdf: "Resultados", page_size: 'Letter', print_media_type: true, disable_javascript: false, javascript_delay: 3000, viewport_size: '1280x1024' }
+    end
+  end
+
+  def historic
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -64,6 +71,10 @@ class HomeController < ApplicationController
     end
   end
 
+  def records
+    @answers = Answer.where(user_email: current_user.email, survey: params['survey']).group_by(&:counter)
+  end
+
   private
     def set_surveys
       @surveys = Survey.find(params[:id])
@@ -78,7 +89,7 @@ class HomeController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:organization_name, :name, :phone_number, :zipcode)
+      params.require(:user).permit(:organization_name, :name, :phone_number, :zipcode, :organization_type)
     end
 
 end

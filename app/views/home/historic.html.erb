@@ -7,14 +7,13 @@
 		<div class="col-md-6 offset-md-3 text-center">
 
 			<!-- Enlaces -->
+			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Regresar'), records_home_path(survey: params[:survey], user_email: current_user.email), class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
+
 			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'), home_index_path, class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
 
 			<% last_survey = Survey.where(status: true).last.id %>
 			<% if params[:survey].to_i == last_survey.to_i %>
 				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'), results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ), class: "btn bg-orange white-color", title:"Crear PDF de los resultados obtenidos", target: "_blank" %>
-			<% else %>
-				<% next_id = params[:survey] %>
-				<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Ir al siguiente eje'), home_path(next_id.to_i+1),  class:"btn btn-primary" %>
 			<% end %>
 
 		</div>
@@ -152,7 +151,7 @@
 			   				<% if @brecha.to_f >= 0 && @brecha.to_f > (s.gap_max).to_f %>
 
 			   					<!-- Gráfico -->
-			   					<div class="col-md-8 offset-md-2 max">	
+			   					<div class="col-md-8 offset-md-2  max">	
 										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
 										<br>
 									</div>
@@ -263,7 +262,7 @@
 				<% Question.where(section_id: s.id).order('id ASC').each_with_index  do |q, number| %>
 					<div class="col-12">
 						<br>
-						<h6 class="text-center" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= q.question.html_safe rescue "" %></b></h6>
+						<h6 class="text-center"><b><i><%= q.question.html_safe rescue "" %></i></b></h6>
 						<% Answer.where(question_id: q.id).order('id ASC').each do |a| %>
 							<% case a.answer_question %>
 								<% when "1" %>
@@ -390,14 +389,12 @@
 			<% last_survey = Survey.where(status: true).last.id %>
 			<% if params[:survey].to_i == last_survey.to_i %>
 				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'), results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ), class: "btn bg-orange white-color", title:"Crear PDF de los resultados obtenidos", target: "_blank" %>
-			<% else %>
-				<% next_id = params[:survey] %>
-				<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Ir al siguiente eje'), home_path(next_id.to_i+1),  class:"btn btn-primary" %>
 			<% end %>
 		</div>
 	</div>
 </div>
 <br><br>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$( ".highcharts-negative" ).addClass('red-chart');

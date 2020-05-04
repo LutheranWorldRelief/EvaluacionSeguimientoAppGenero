@@ -1,31 +1,40 @@
+<!-- Header container -->
+<%= render "home/partials/navbar"%>
+
 <div class="container">
-  <div class="col-md-4 offset-md-4">
-    <%= image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid") %>
-  </div>
-  <br>
   <div class="row">
-    <div class="col-md-8 offset-md-2 text-center bg-skin">
-      <br>
-      <h4 class="text-center">Datos de registro</h4>
+    <div class="col-md-8 offset-md-2 text-center bg-skin" style="padding-left: 2rem; padding-right: 2rem;">
+      <br><br>
+      <h4 class="text-center"><b>REGISTRARSE AHORA</b></h4>
       <br>
       <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
         <%= f.error_notification %>
+        <h6 class="text-left"><b><i class="fas fa-landmark"></i>&nbsp;&nbsp;DATOS DE LA ORGANIZACIÓN</b></h6>
+        <br>
         <div class="row">
-          <div class="col-12 col-md-10 offset-md-1">
+          <div class="col-12 col-md-6">
             <div class="form-group">
               <label><b>Nombre de la Organización:</b></label>
-              <%= f.input :organization_name, required: true, autofocus: true, label: false, input_html: { class: "col-12 text-center form-control" }, placeholder: "Escribir nombre de la organización" %><br>
+              <%= f.input :organization_name, required: "required", autofocus: true, label: false, input_html: { class: "col-12 text-center form-control" }, placeholder: "Escribir nombre de la organización" %><br>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-group">
+              <%= f.input :organization_type, priority: [ "Para ambos géneros" ], collection: [ "Para ambos géneros", "Exclusiva para mujeres", "Exclusiva para hombres" ], label: "Tipo de organización", label_html: { class: 'label-input'}, input_html: { class: "select2 form-control col-md-12 text-center"}, prompt: "-- Seleccione una opción --", required: "required"%>
+              <br>
             </div>
           </div>
         </div>
+        <h6 class="text-left"><b><i class="fas fa-user-alt"></i>&nbsp;&nbsp;DATOS DEL USUARIO</b></h6>
+        <br>
         <div class="row">
-          <div class="col-md-5 offset-md-1">
+          <div class="col-md-6">
             <div class="form-group">
               <label><b>Nombre completo:</b></label>
               <%= f.input :name, required: true, autofocus: true, label: false, input_html: { class: "col-12 text-center form-control" }, placeholder: "Escribir nombre completo" %><br>
             </div>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-6">
             <div class="form-group">
               <label><b>Correo electrónico:</b></label>
               <%= f.input :email, required: true, autofocus: true, label: false, input_html: { autocomplete: "email", class: "col-12 text-center form-control" }, placeholder: "Escribir correo electrónico" %><br>
@@ -33,13 +42,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-5 offset-md-1">
+          <div class="col-md-6">
             <div class="form-group">
               <label><b>País:</b></label>
-              <%= f.country_select :country, {}, { class: "col-12 text-center form-control" } %>
+              <%= f.country_select :country, {}, { class: "col-12 text-center form-control", id: "country" } %>
             </div>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-6">
             <div class="form-group">
               <label><b>Número de teléfono:</b></label> 
               <%= f.input :zipcode, label: false, input_html: { id: "zipcode", type: "hidden", value: '' } %>

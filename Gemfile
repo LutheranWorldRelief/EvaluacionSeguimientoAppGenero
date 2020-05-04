@@ -97,11 +97,14 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
   gem 'carrierwave'
   gem 'mini_magick'
   # Countries
-  gem 'country_select'
+  gem 'country_select', '~> 4.0'
   gem 'intl-tel-input-rails'
   # Slider UI range
   gem 'form_slider'
   #PDF
   gem 'wicked_pdf'
   gem 'wkhtmltopdf-binary-edge', '0.12.4.0'
+
+  gem 'formtastic', '~> 3.1', '>= 3.1.4'
+  gem 'mini_racer'
   

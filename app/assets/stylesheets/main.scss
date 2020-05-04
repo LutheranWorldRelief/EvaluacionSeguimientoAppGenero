@@ -10,7 +10,7 @@
 	.survey-item { border-radius: 0px !important; }
 	.survey_header { text-transform: uppercase !important; }
 	.survey_section { text-transform: uppercase !important; }
-	.answer-icons { width: 150px; }
+	.answer-icons { width: 100px; }
 	.gray-img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: gray !important; }
 	.div-gray-img > img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: gray !important; }
 	.bg-surveys { background-image: url(asset_path("LWRBanner.jpg")); background-repeat: no-repeat; background-size: 100%; height: 500px; }
@@ -79,10 +79,75 @@
 	.modal-content { border-radius: 0 !important; }
 
 // Grafics
-	g rect:nth-child(2) { fill: #31b5b5 !important; }
+	.lightblue-chart { fill: #31b5b5 !important; }
+	.red-chart { fill: #FF0051 !important; }
+	.blue-chart { fill: #1E4051 !important; }
+	.orange-chart { fill: #FFC100 !important; }
+
+	.negative g rect:nth-child(2) { fill: #FF0051 !important; }
+ 	.ideal g rect:nth-child(2) { fill: #31b5b5 !important; }
+ 	.max g rect:nth-child(2) { fill: #FFC100 !important; }
+ 	.normal g rect:nth-child(2) { fill: #1E4051 !important; }
 
 	.selected-flag { width: 110px !important; }
 
 	.ui-widget-content { background: #c3cf21; }
 	.range .ui-slider-handle { background: #00a9a7; }
 	.range .ui-slider-range { background: #fff; }
+
+	.question-item > p {
+		min-height: 8rem;
+	}
+
+	.d-item {
+		background-color: silver;
+	  font-weight: bold;
+	  -webkit-background-size: cover;
+	  -moz-background-size: cover;
+	  -o-background-size: cover;
+	  background-size: cover;
+	  min-height: 300px !important; padding: 1rem 1rem 2rem;
+	  width: 100%;
+	  background-position: center;
+	  padding: 2.5rem;
+	  position: relative;
+	}
+	.d-item h4 {
+		font-weight: bold;
+	}
+	.d-item h6 {
+		padding-top: 4rem;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		padding-bottom: 1rem;
+		font-size: 16px;
+		line-height: 30px;
+	}
+	.d-item-img {
+		width: 150px;
+	}
+	.diagnostics-items { 
+		margin-bottom: 4rem;
+	}
+	.d-item-1 { 
+	  background: #01acc8;
+	}
+	.d-item-2 { 
+	  background: #01bf69;
+	}
+	.d-item-3 { 
+	  background: #a0d434;
+	}
+
+	.d-item-4 { 
+	  background: #ff9841;
+	}
+
+
+	@media (min-width: 768px) {
+		.lpi-item {
+			flex: 0 0 20% !important;
+    	max-width: 20% !important;
+		}
+	}
+

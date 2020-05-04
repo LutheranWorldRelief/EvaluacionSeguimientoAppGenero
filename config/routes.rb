@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     member do
       post :insert_data
       get "results"
+      get "records"
+      get "historic"
     end
     collection do
       get :edit_user

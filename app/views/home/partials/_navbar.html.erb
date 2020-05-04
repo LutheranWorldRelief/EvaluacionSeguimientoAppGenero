@@ -1,0 +1,24 @@
+<!-- Menú principal -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 offset-md-6 text-right">
+			<%= link_to "<i class='fa fa-id-card-alt' aria-hidden='true'></i> Sobre nosotros".html_safe, "https://lwr.org/about-lwr", class: "btn btn-outline-primary", target: "_blanck" %>
+			<%= link_to "<i class='fa fa-envelope-open' aria-hidden='true'></i> Contactanos".html_safe, "https://lwr.org/contact-us", class: "btn btn-outline-primary", target: "_blanck" %>
+
+			<% if user_signed_in? %>
+				<%= link_to "<i class='fa fa-user'></i> Perfil".html_safe, edit_user_home_index_path, class: "btn btn-outline-primary", remote: true %>
+				<%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Salir".html_safe, destroy_user_session_path, method: :delete, class: "btn btn-outline-primary" %>
+			<% end %>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 offset-md-4 text-center">
+			<br>
+			<%= link_to( image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid"), home_index_path) %>
+			<br><br>
+		</div>
+	</div>
+</div>
+<div id="profile_edit"></div>

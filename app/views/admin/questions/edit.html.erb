@@ -4,7 +4,16 @@
 			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;Regresar'), :back, class: "btn btn-secondary", title:"Regresar a todas las encuestas" %>
 		</div>
 		<div class="col-md-8">
-			<h4 class="text-center"><b><i class="fas fa-clipboard-list"></i></b>&nbsp;Editar Pregunta<br><br><b><%= Survey.find(@question.section_id).name rescue nil %> - <%= @question.id %></b></h4>
+			<h4 class="text-center">
+				<b><i class="fas fa-clipboard-list"></i></b>
+				&nbsp;Editar Pregunta
+				<br><br>
+				</b>
+			</h4>
+			<h5 class="text-center">
+				ID: <%= @question.id %>
+				<%= Question.where(id: @question.id).last.question.html_safe rescue nil %> 
+			</h5>
 		</div>
 	</div>
 	<br>

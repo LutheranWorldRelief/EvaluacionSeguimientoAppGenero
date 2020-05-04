@@ -1,0 +1,70 @@
+
+<!-- Header container -->
+<%= render "home/partials/navbar"%>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12 col-md-4 offset-md-4 text-center">
+			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'), home_index_path, class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-12 text-center">
+			<h4>
+				<br><br>
+				<% survey_name = Survey.where(id: params['survey']).first.name %>
+				<b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= survey_name %></b>
+				<br><br>
+			</h4>
+			<h5 class="text-center"><i>Respuestas anteriores<i></h5>
+		</div>
+	</div>
+</div>
+<br>
+<div class="container">
+	<div class="row">
+			<% unless @answers.blank? %>
+				<% @answers.each_with_index do |a, index| %>
+					<div class="col-sm-3">
+				    <div class="card">
+				      <div class="card-body text-center bg-ligthgray">
+				        <h6 class="card-title"><b>Resultado <%= index+1 %></b></h6>
+				        <% b = a[1][0,1] %>
+				        <%= b.first.created_at.strftime('%d-%m-%Y') %>
+				        <br><br>
+				        <%= link_to( image_tag("research.png", alt:"", class:"img-fluid", width: "150px"), historic_home_path(survey: params['survey'], user_email: params['user_email'], counter: b.first.counter)) %>
+				        <br><br>
+				        <%= link_to "Ver resultados", historic_home_path(survey: params['survey'], user_email: params['user_email'], counter: b.first.counter), :class => "btn btn-primary" %>
+				      </div>
+				    </div>
+				  </div>
+				<% end %>
+			<% else %>
+				<div class="col-12 text-center">
+					<p>-- No hay resultados --</p>
+				</div>
+			<% end %>
+		</div>
+</div>
+<br><br><br><br>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	   $(".datatable").DataTable({
+      "language": {
+        "lengthMenu": "Registros por página _MENU_",
+        "zeroRecords": "Registros no encontrados.",
+        "info": "Página _PAGE_ de _PAGES_",
+        "infoEmpty": "No hay registros.",
+        "infoFiltered": "(Filtrado de _MAX_ total de registros.)",
+        "search": "_INPUT_",
+      	"searchPlaceholder": "Buscar...",
+        "paginate": {
+		      "previous": "Anterior",
+		      "next": "Siguiente"
+		    }
+		  }
+  	});
+	} );
+</script>

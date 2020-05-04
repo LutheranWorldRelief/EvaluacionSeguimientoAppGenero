@@ -1,0 +1,8 @@
+@import 'application';
+.overrideResponsive {
+  @include float-left;
+}
+
+.hideOnPdf {
+  display:none;
+}

@@ -1,24 +1,6 @@
-<div class="container">
-	<div class="row">
-		<div class="col-md-6 offset-md-6 text-right">
-			<%= link_to "<i class='fa fa-id-card-alt' aria-hidden='true'></i> Sobre nosotros".html_safe, "https://lwr.org/about-lwr", class: "btn btn-outline-primary", target: "_blanck" %>
-			<%= link_to "<i class='fa fa-envelope-open' aria-hidden='true'></i> Contactanos".html_safe, "https://lwr.org/contact-us", class: "btn btn-outline-primary", target: "_blanck" %>
+<!-- Header container -->
+<%= render "home/partials/navbar"%>
 
-			<% if user_signed_in? %>
-				<%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Salir".html_safe, destroy_user_session_path, method: :delete, class: "btn btn-outline-primary" %>
-				<%= link_to "<i class='fa fa-user'></i> Perfil".html_safe, edit_user_home_index_path, class: "btn btn-outline-primary", remote: true %>
-			<% end %>
-		</div>
-	</div>
-</div>
-<div class="container">
-	<div class="row">
-		<div class="col-md-4 offset-md-4 text-center">
-			<br>
-			<%= image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid") %>
-		</div>
-	</div>
-</div>
 <div class="container">
 	<br><br>	
 	<h4 class="text-center"><b>CAJA DE HERRAMIENTAS DE GÉNERO</b></h4>
@@ -31,11 +13,14 @@
 <% if user_signed_in? %>
 	<div class="container">
 		<div class="row">
+			<% first_survey = Survey.where(status: true).first.id %>
+
 			<%- @surveys.each_with_index do |s, index | %>
+				<% answer_exist = Answer.where(user_email: current_user.email, survey: s.id).group_by(&:counter) %>
 				<div class="col-md-6 survey-item hvr-pulse">
 			    <div class="row no-gutters border overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-ligthgray">
 			    	<div class="col-md-4 d-none d-lg-block text-center">
-			    		<%= image_tag("survey.png", alt:"Icono de encuesta", class:"img-fluid") %>
+			    		<%= image_tag("survey.png", alt:"Icono de Diagnóstico", class:"img-fluid") %>
 			        <!--<h1 class="survey-img darkblue-color text-right"><i class="fas fa-clipboard-list"></i></h1>-->
 			      </div>
 			      <div class="col-md-8 p-4 d-flex flex-column position-static">
@@ -43,7 +28,19 @@
 			        <h4 class="mb-0"><%= s.name %></h4>
 			        <br>
 			        <div class="text-muted">
-			        	<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Realizar encuesta'), home_path(s.id),  class:"btn btn-primary" %>
+			        	<% if first_survey.to_i == s.id %>
+
+			        		<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Comenzar Diagnóstico'), home_path(s.id),  class:"btn btn-primary" %>
+
+			        		<% unless answer_exist.blank? %>
+			        			<%= link_to raw('<i class="fas fa-eye"></i>'), records_home_path(s.id, survey: s.id, user_email: current_user.email),  class:"btn btn-sucess btn-sm", title: "Ver resultados anteriores" %>
+			        		<% end %>
+
+			        	<% else %>
+			        		<% unless answer_exist.blank? %>
+			        			<%= link_to raw('<i class="fas fa-eye"></i>&nbsp;&nbsp;Resultados anteriores'), records_home_path(s.id, survey: s.id, user_email: current_user.email),  class:"btn btn-sucess btn-sm", title: "Ver resultados anteriores"  %>
+			        		<% end %>
+			        	<% end %>
 			        </div>
 			      </div>
 			    </div>
@@ -52,9 +49,57 @@
 		</div>
 	</div>
 <% else %>
+	<div class="container diagnostics-items">
+		<div class="row">
+			<div class="col-md-6 d-item d-item-1" data-hoverimage="<%= image_path('/assets/acceso-a-recursos.jpg') %>" style="background-position: center; background-size: cover;">
+        <div class="row">
+          <div class="col-12 text-center d-item-hide-1">
+            <h6 class="white-color">El acceso a los recursos y bienes (AR) facilita la participación de una mujer o un hombre en actividades agrícolas y la posibilidad de aquella persona de desarrollar sus actividades productivas.</h6>
+          </div>
+          <div class="col-12 text-center d-item-show-1">
+            <%= image_tag("/assets/icono-ar.png", alt:"Acceso a Recursos", class:"img-fluid d-item-img", title: "Acceso a Recursos") %>
+            <h4 class="white-color">ACCESO A RECURSOS Y BIENES</h4>
+          </div>
+         </div>
+      </div>
+      <div class="col-md-6 d-item d-item-2" data-hoverimage="<%= image_path('/assets/practicas-y-participacion.jpg') %>" style="background-position: center; background-size: cover;">
+        <div class="row">
+          <div class="col-12 text-center d-item-hide-2">
+            <h6 class="white-color">La vida cotidiana de los hombres y las mujeres es diferente. Los hombres y las mujeres suelen tener diferentes oportunidades en el hogar y en la finca. Participación en diferentes actividades en la comunidad.</h6>
+          </div>
+          <div class="col-12 text-center d-item-show-2">
+            <%= image_tag("/assets/icono-pp.png", alt:"Acceso a Recursos", class:"img-fluid d-item-img", title: "Acceso a Recursos") %>
+            <h4 class="white-color">PRÁCTICAS Y PARTICIPACIÓN</h4>
+          </div>
+         </div>
+      </div>
+      <div class="col-md-6 d-item d-item-3" data-hoverimage="<%= image_path('/assets/creencias-y-percepcion.jpg') %>" style="background-position: center; background-size: cover;">
+        <div class="row">
+          <div class="col-12 text-center d-item-hide-3">
+            <h6 class="white-color">Diferentes culturas cuentan con sistemas de creencias sobre el género, las cuales a su vez dan forma a las identidades y al comportamiento de género.</h6>
+          </div>
+          <div class="col-12 text-center d-item-show-3">
+            <%= image_tag("/assets/icono-cp.png", alt:"Acceso a Recursos", class:"img-fluid d-item-img", title: "Acceso a Recursos") %>
+            <h4 class="white-color">CREENCIAS Y PERCEPCIÓN</h4>
+          </div>
+         </div>
+      </div>
+      <div class="col-md-6 d-item d-item-4" data-hoverimage="<%= image_path('/assets/leyes-politicas.jpg') %>" style="background-position: center; background-size: cover;">
+        <div class="row">
+          <div class="col-12 text-center d-item-hide-4">
+            <h6 class="white-color">Las leyes, políticas e insituciones determinan quienes tienen derechos a los recursos y bienes, la representación, la documentación legal, etc. </h6>
+          </div>
+          <div class="col-12 text-center d-item-show-4">
+            <%= image_tag("/assets/icono-lp.png", alt:"Acceso a Recursos", class:"img-fluid d-item-img", title: "Leyes, Políticas e Instituciones") %>
+            <h4 class="white-color">LEYES, POLÍTICAS E INSTITUCIONES</h4>
+          </div>
+         </div>
+      </div>
+		</div>
+	</div>
 	<div class="container-fluid bg-surveys">
 		<br><br>
-		<h6 class="text-center aqua-color"><b>Debes iniciar sesión para responder las encuestas</b></h6><br>
+		<h6 class="text-center aqua-color"><b>Debes iniciar sesión para responder el diagnóstico</b></h6><br>
 		<div class="col-md-4 offset-md-4 text-center">
 			<%= link_to raw('<i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Iniciar Sesión'), new_user_session_path,  class:"btn btn-primary text-center btn-lg" %>
 		</div>
@@ -82,4 +127,62 @@
 	</div>
 	<br><br>
 </div>
-<div id="profile_edit"></div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.d-item-hide-1').hide();
+    $('.d-item-show-1').show();
+    $('.d-item-hide-2').hide();
+    $('.d-item-show-2').show();
+    $('.d-item-hide-3').hide();
+    $('.d-item-show-3').show();
+    $('.d-item-hide-4').hide();
+    $('.d-item-show-4').show();
+
+    //Hover 
+    $(".d-item-1").hover(function(){
+        var imgurl = $(this).data("hoverimage");
+        $(this).css("background-image", "url(" + imgurl + ")");
+        $('.d-item-hide-1').show();
+        $('.d-item-show-1').hide();
+    }, function(){
+        $(this).css("background-image", "");
+        $('.d-item-hide-1').hide();
+        $('.d-item-show-1').show();
+    });
+
+    $(".d-item-2").hover(function(){
+        var imgurl = $(this).data("hoverimage");
+        $(this).css("background-image", "url(" + imgurl + ")");
+        $('.d-item-hide-2').show();
+        $('.d-item-show-2').hide();
+    }, function(){
+        $(this).css("background-image", "");
+        $('.d-item-hide-2').hide();
+        $('.d-item-show-2').show();
+    });
+
+    $(".d-item-3").hover(function(){
+        var imgurl = $(this).data("hoverimage");
+        $(this).css("background-image", "url(" + imgurl + ")");
+        $('.d-item-hide-3').show();
+        $('.d-item-show-3').hide();
+    }, function(){
+        $(this).css("background-image", "");
+        $('.d-item-hide-3').hide();
+        $('.d-item-show-3').show();
+    });
+
+    $(".d-item-4").hover(function(){
+        var imgurl = $(this).data("hoverimage");
+        $(this).css("background-image", "url(" + imgurl + ")");
+        $('.d-item-hide-4').show();
+        $('.d-item-show-4').hide();
+    }, function(){
+        $(this).css("background-image", "");
+        $('.d-item-hide-4').hide();
+        $('.d-item-show-4').show();
+    });
+
+	});
+</script>

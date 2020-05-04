@@ -22,4 +22,10 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  def country_name
+    country = self.country
+    ISO3166::Country[country]
+  end
+
 end

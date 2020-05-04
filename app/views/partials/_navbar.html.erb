@@ -2,10 +2,6 @@
 	<div class="my-0 mr-md-auto font-weight-normal text-left">
 		<%= link_to image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"col-12 col-md-7"), "/" %>
 	</div>
-  <div class="">
-    <p class="welcome-msg">Bienvenido&nbsp;&nbsp;<b><i class="fa fa-user" aria-hidden="true"></i>
-&nbsp;<%#= current_user.email %></b></p>
-  </div>
   <%= link_to "<i class='fas fa-clipboard-list'></i>&nbsp;&nbsp;Ver Encuestas".html_safe, home_index_path, target: "_blank", class: "btn btn-outline-primary" %>
   <%= link_to "<i class='fas fa-tools'></i>&nbsp;&nbsp;Administrar Encuestas".html_safe, admin_surveys_path, class: "btn btn-outline-primary" %>
   <%= link_to "<i class='fas fa-file-pdf'></i>&nbsp;&nbsp;Administrar Guías".html_safe, admin_guides_path, class: "btn btn-outline-primary" %>
