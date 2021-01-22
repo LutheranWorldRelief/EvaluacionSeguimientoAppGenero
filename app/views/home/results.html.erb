@@ -214,7 +214,7 @@
 			   				<% if @brecha.to_f >= 0 && @brecha.to_f > (s.gap_max).to_f %>
 			   					<div class="col-md-8 offset-md-2 max">
 			   						<!-- Gráfico -->
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
+										<%= bar_chart [["BRECHA PROMEDIO (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
 			   						<br>
 			   					</div>
 			   					<div class="col-12">
@@ -224,7 +224,7 @@
 			   				<% elsif @brecha.to_f >= 0 && @brecha.to_f >= (s.gap_porcent).to_f  && @brecha.to_f <= (s.gap_max).to_f %>
 			   					<div class="col-md-8 offset-md-2 normal">
 				   					<!-- Gráfico -->
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
+										<%= bar_chart [["BRECHA PROMEDIO (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
 				   					<br>
 				   				</div>
 				   				<div class="col-12">
@@ -233,7 +233,7 @@
 				   				</div>
 			   				<% elsif @brecha.to_f < 0 %>
 			   					<div class="col-md-8 offset-md-2 negative">
-			   						<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
+			   						<%= bar_chart [["BRECHA PROMEDIO (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
 			   						<br>
 			   					</div>
 			   					<div class="col-12">
@@ -243,7 +243,7 @@
 			   				<% else %>
 			   					<div class="col-md-8 offset-md-2 ideal">
 			   						<!-- Gráfico -->
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
+										<%= bar_chart [["BRECHA PROMEDIO (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
 			   						<br>
 			   					</div>
 			   					<div class="col-12">
