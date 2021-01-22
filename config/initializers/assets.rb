@@ -15,3 +15,6 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile += %w[ckeditor/config.js]
 Rails.application.config.assets.precompile += %w( chartkick.js )
 Rails.application.config.assets.precompile += ['bootstrap.css']
+Rails.application.config.assets.precompile += %w( pdf.css pdf.js  )
+Rails.application.config.assets.precompile += %w( application.scss )
+

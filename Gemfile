@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.3'
+# ruby '2.5.3'
+ruby '2.4.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
@@ -61,6 +62,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+gem 'unicorn', '~> 5.5', '>= 5.5.1'
 #Custom gems
   # Use Postgres as the database for Active Record
   gem 'pg', '~> 1.1', '>= 1.1.4'
@@ -105,6 +107,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
   gem 'wicked_pdf'
   gem 'wkhtmltopdf-binary-edge', '0.12.4.0'
 
+  gem "wkhtmltopdf-binary"
   gem 'formtastic', '~> 3.1', '>= 3.1.4'
   gem 'mini_racer'
-  
+
