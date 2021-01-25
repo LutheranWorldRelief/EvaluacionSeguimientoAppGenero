@@ -27,3 +27,6 @@ assets_clean.sh
 assets_compile.sh
 unicorn-kill.sh
 unicorn.sh
+
+.env.pg
+.env.ruby
