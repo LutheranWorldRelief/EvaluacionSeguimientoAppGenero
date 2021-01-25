@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-export RAILS_ENV=production
-gem install unicorn -v 5.1.0
-# Remove a potentially pre-existing unicorn.pid for unicorn.
 rm -f /app/pids/unicorn.pid
 rm -f /app/tmp/server.pid
 
