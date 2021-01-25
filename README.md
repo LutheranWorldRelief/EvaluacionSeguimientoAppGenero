@@ -5,9 +5,10 @@ Gender app project developed for gender equity and equal opportunities for women
 
 ### Technologies
   >
-    1. Ruby: 2.5.3
-    2. Rails: 5.2
-    3. Postgresql: 9.3
+    1. Ruby: 2.5.8
+    2. Unicorn: 5.5
+    3. Postgresql: 12.5
+    4. Docker 20.10.2
 
 ### First install Postgresql
 
