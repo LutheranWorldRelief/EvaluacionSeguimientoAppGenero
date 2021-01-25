@@ -1,12 +1,16 @@
 <!-- Header container -->
-<%= render "home/partials/navbar"%>
+<%= render "home/partials/navbar" %>
+
+<% @survey = Survey.find(params[:survey]) %>
+<% @user = User.where(email: params[:user_email]).last %>
+<% counter = params[:counter] %>
 
 <!-- Barra de opciones -->
 <div class="container">
 	<div class="row">
 		<div class="col-md-6 offset-md-3 text-center">
 
-			<!-- Enlaces -->
+      <!-- Enlaces -->
 			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Regresar'), records_home_path(survey: params[:survey], user_email: current_user.email), class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
 
 			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'), home_index_path, class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
@@ -20,65 +24,8 @@
 	</div>
 </div>
 
-<!-- Datos de la organización y usuario -->
-<div class="container">
-	<h4 class="text-center">
-		<br><br>
-		<b><%= Survey.where(id: params[:survey]).last.name.html_safe rescue "" %></b>
-		<br>
-	</h4>
-	 <% @date = Answer.where(survey: params[:survey], user_email: params[:user_email]).last.created_at %>
-  <h6 class="text-center">
-  	Fecha: <b><%= @date.strftime("%d-%m-%Y") %></b>
-  	<br><br>
-  </h6>
-  <h5 class="text-center darkblue-color">
-  	<b><%= User.where(email: params[:user_email]).last.organization_name %></b>
-  	<br>
-  </h5>
-	<div class="row">
-		<div class="col-md-4 text-center">
-			<p>
-				<small>1. Representante de la Organización</small>
-			</p>
-      <h6>
-      	<b><%= User.where(email: params[:user_email]).last.name %></b>
-      </h6>
-		</div>
-		<div class="col-md-4 text-center">
-			<p>
-				<small>2. Correo electrónico</small>
-			</p>
-      <h6>
-      	<b><%= User.where(email: params[:user_email]).last.email %></b>
-      </h6>
-		</div>
-		<div class="col-md-2 text-center">
-			<p>
-				<small>3. País</small>
-			</p>
-      <h6>
-      	<b><%= User.where(email: params[:user_email]).last.country_name %></b>
-      </h6>
-		</div>
-		<div class="col-md-2 text-center">
-			<p>
-				<small>4. Número de teléfono</small>
-			</p>
+<%= render partial: "home/partials/historic_org_user" %>
 
-      <% @phone = User.where(email: params[:user_email]).last.phone_number %>
-      <% if @phone.nil? %>
-        <h6>
-        	<b><%= User.where(email: params[:user_email]).last.zipcode %> <%= User.where(email: params[:user_email]).last.phone_number %></b>
-        </h6>
-      <% else %>
-        <h6>
-        	<b><%= User.where(email: params[:user_email]).last.zipcode %> <%= User.where(email: params[:user_email]).last.phone_number %></b>
-        </h6>
-      <% end %>
-		</div>
-	</div>
-</div>
 <div class="container">
 	<h4 class="text-center">
 		<br><br>
@@ -89,177 +36,36 @@
 <div class="container">
 	<div class="row">
 		<!-- Secciones -->
-		<% Section.where(survey_id: params[:survey]).order('id ASC').each_with_index  do |s, i| %>
+		<% Section.where(survey_id: params[:survey]).order('id ASC').each_with_index  do |section, sectionIndex| %>
 
 			<!-- Variables array -->
-			<% answerQuestion_array = [] %>
-			<% questionType_array = [] %>
+      <% questionType_array = [] %>
+      <% answerQuestion_array = [] %>
 			<% resultType_array = [] %>
 			<% resultAnswer_array = [] %>
 
-			<!-- Preguntas -->
-			<% Question.where(section_id: s.id).order('id ASC').each  do |q| %>
-				
-				<!-- answer array -->
-					<% questionType_array << q.question_type %>
-
-				<!-- Array de respuestas - Begin -->
-					<% Answer.where(question_id: q.id).order('id ASC').each do |a| %>
-
-					<!-- Asignando los resultados al array_answer -->
-					<% answerQuestion_array << a.answer_question %>
-
-				<% end %>
-	   	<% end %>
+			<% section.questions.order('id ASC').each do |question| %><!-- Questions -->
+        <% questionType_array << question.question_type %>
+        <% answers = Answer.where(user_email: @user.email, survey: @survey.id, question_id: question.id, counter: counter )  %>
+        <% answers.each do |answer| %><!-- Answers -->
+          <% answerQuestion_array << answer.answer_question %>
+        <% end %><!-- Answers - END -->
+	   	<% end %><!-- Questions - END -->
 			
 			<!-- Resultados de question array -->
-			<% if questionType_array.include?("Número") || questionType_array.include?("Moneda") || questionType_array.include?("Decimal") && questionType_array.include?("Checkbox No data")  %>
+			<% if (questionType_array.include?("Número") || questionType_array.include?("Moneda") || questionType_array.include?("Decimal")) && questionType_array.include?("Checkbox No data") %>
 
-				<!-- Ńúmeros y Checkbox No Data Questions -->
-				<% if answerQuestion_array.include?("No data") %>
-				<div class="col-12">
-					<!-- Nombre de la sección -->
-					<h5 class="darkblue-color"><b><%= i+1 %>. <%= s.name %></b></h5>
-					<%= s.recommendation_no_data.html_safe rescue "" %>
-				</div>
-				<% elsif answerQuestion_array.include?("Data") %>
-						<% if answerQuestion_array.include?("Confirm") %>
-							<% Question.where(section_id: s.id, question_type: "Checkbox").order('id ASC').each  do |qa| %>
-								<div class="col-12">
-									<!-- Nombre de la sección -->
-									<h5 class="darkblue-color"><b><%= i+1 %>. <%= s.name %></b></h5>
-									<%= qa.question.html_safe rescue "" %>
-								</div>
-							<% end %>
-						<% elsif answerQuestion_array.include?("No confirm") %>
-							<% if answerQuestion_array[0].to_f == 0 && answerQuestion_array[1].to_f == 0 %>
-								<div class="col-12">
-									<!-- Nombre de la sección -->
-									<h5 class="darkblue-color"><b><%= i+1 %>. <%= s.name %></b></h5>
-									<p class="text-left"><small>No brindaste una respuesta a esta pregunta</small></p>
-								</div>
-							<% else %>
-								<div class="col-12">
-									<!-- Nombre de la sección -->
-									<h5 class="darkblue-color"><b><%= i+1 %>. <%= s.name %></b></h5>
-								</div>
-
-								<!-- Calculo -->
-								<% @brecha = (((answerQuestion_array[0].to_f-answerQuestion_array[1].to_f)/(answerQuestion_array[0].to_f+answerQuestion_array[1].to_f))*100).to_f %>
-
-								<!-- Mensaje de alerta_-->
-			   				<% if @brecha.to_f >= 0 && @brecha.to_f > (s.gap_max).to_f %>
-
-			   					<!-- Gráfico -->
-			   					<div class="col-md-8 offset-md-2  max">	
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-										<br>
-									</div>
-			   					<div class="col-12">
-			   						<%= s.recommendation_gap_max.html_safe rescue "" %>
-			   						<br><br>
-			   				</div>
-			   				<% elsif @brecha.to_f >= 0 && @brecha.to_f >= (s.gap_porcent).to_f  && @brecha.to_f <= (s.gap_max).to_f %>
-
-			   					<!-- Gráfico -->
-			   					<div class="col-md-8 offset-md-2 normal">
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-										<br>
-									</div>
-									<div class="col-12">
-			   						<%= s.recommendation.html_safe %>
-			   						<br><br>
-			   					</div>
-			   				<% elsif @brecha.to_f < 0 %>
-			   					<!-- Gráfico -->
-			   					<div class="col-md-8 offset-md-2 negative">
-			   						<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-			   						<br><br>
-			   					</div>
-			   					<div class="col-12">
-			   						<%= s.recommendation_negative.html_safe rescue "" %>
-			   						<br><br>
-			   					</div>
-			   				<% else %>
-			   					<!-- Gráfico -->
-			   					<div class="col-md-8 offset-md-2 ideal">
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-										<br>
-									</div>
-									<div class="col-12">
-			   						<h5 class="text-center"><b>¡Buen trabajo!</b></h5>
-			   						<br>
-			   					</div>
-			   				<% end %>
-							<% end %>
-						
-						<% else %>
-							<% if answerQuestion_array[0].to_f == 0 && answerQuestion_array[1].to_f == 0 %>
-								<div class="col-12">
-									<!-- Nombre de la sección -->
-									<h5 class="darkblue-color"><b><%= i+1 %>. <%= s.name %></b></h5>
-									<p class="text-left"><small>No brindaste una respuesta a esta pregunta</small></p>
-								</div>
-							<% else %>
-								<div class="col-12">
-									<!-- Nombre de la sección -->
-									<h5 class="darkblue-color"><b><%= i+1 %>. <%= s.name %></b></h5>
-								</div>
-
-								<!-- Calculo -->
-								<% @brecha = (((answerQuestion_array[0].to_f-answerQuestion_array[1].to_f)/(answerQuestion_array[0].to_f+answerQuestion_array[1].to_f))*100).to_f %>
-
-								<!-- Mensaje de alerta_-->
-			   				<% if @brecha.to_f >= 0 && @brecha.to_f > (s.gap_max).to_f %>
-			   					<div class="col-md-8 offset-md-2 max">
-			   						<!-- Gráfico -->
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-			   						<br>
-			   					</div>
-			   					<div class="col-12">
-			   						<%= s.recommendation_gap_max.html_safe rescue "" %>
-			   						<br><br>
-			   					</div>
-			   				<% elsif @brecha.to_f >= 0 && @brecha.to_f >= (s.gap_porcent).to_f  && @brecha.to_f <= (s.gap_max).to_f %>
-			   					<div class="col-md-8 offset-md-2 normal">
-				   					<!-- Gráfico -->
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-				   					<br>
-				   				</div>
-				   				<div class="col-12">
-				   					<%= s.recommendation.html_safe %>
-				   					<br><br>
-				   				</div>
-			   				<% elsif @brecha.to_f < 0 %>
-			   					<div class="col-md-8 offset-md-2 negative">
-			   						<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-			   						<br>
-			   					</div>
-			   					<div class="col-12">
-				   					<%= s.recommendation_negative.html_safe rescue "" %>
-				   					<br><br>
-				   				</div>
-			   				<% else %>
-			   					<div class="col-md-8 offset-md-2 ideal">
-			   						<!-- Gráfico -->
-										<%= bar_chart [["BRECHA IDEAL (%)", s.gap_porcent.to_s],["BRECHA OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true %>
-			   						<br>
-			   					</div>
-			   					<div class="col-12">
-			   						<h5 class="text-center"><b>¡Buen trabajo!</b></h5>
-			   						<br>
-			   					</div>
-			   				<% end %>
-							<% end %>
-						<% end %>
-				<% else %>
-
-				<% end %>
+        <%= render partial: "home/partials/historic_answers",
+              locals: {
+                answerQuestion_array: answerQuestion_array,
+                sectionIndex: sectionIndex,
+                section: section,
+        } %>
 
 
 			<!-- Rango de Numeros -->
 			<% elsif questionType_array.include?("Rango de Numeros") %>
-				<% Question.where(section_id: s.id).order('id ASC').each_with_index  do |q, number| %>
+				<% Question.where(section_id: section.id).order('id ASC').each_with_index  do |q, number| %>
 					<div class="col-12">
 						<br>
 						<h6 class="text-center"><b><i><%= q.question.html_safe rescue "" %></i></b></h6>
@@ -305,7 +111,7 @@
 			
 			<!-- Checkbox -->
 			<% elsif questionType_array.include?("Checkbox")  %>
-					<% Question.where(section_id: s.id).order('id ASC').each do |qq| %>
+					<% Question.where(section_id: section.id).order('id ASC').each do |qq| %>
 						<div class="col-md-2 lpi-item text-center">
 							<small class="question-item"><%= qq.question.html_safe %></small>
 							<p><b>Resultado:</b></p>
