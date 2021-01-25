@@ -8,7 +8,8 @@ Gender app project developed for gender equity and equal opportunities for women
     1. Ruby: 2.5.8
     2. Unicorn: 5.5
     3. Postgresql: 12.5
-    4. Docker 20.10.2
+    4. Docker: 20.10.2
+    5. Docker-compose: 1.25.4
 
 ### Create ENV files
 
