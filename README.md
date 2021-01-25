@@ -10,6 +10,12 @@ Gender app project developed for gender equity and equal opportunities for women
     3. Postgresql: 12.5
     4. Docker 20.10.2
 
+### Create ENV files
+
+  > touch .env.pg
+
+  > touch .env.ruby
+
 ### First install Postgresql
 
   > sudo apt install postgresql postgresql-contrib
