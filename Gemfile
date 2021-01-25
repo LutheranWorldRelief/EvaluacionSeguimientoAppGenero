@@ -74,7 +74,7 @@ gem 'unicorn', '~> 5.5', '>= 5.5.1'
   # Devise Authentication
   gem 'devise', '~> 4.6', '>= 4.6.2'
   # Simple Form
-  gem 'simple_form', '~> 4.1'
+  gem 'simple_form', '~> 5.0'
   # Fontawesome
   gem 'font-awesome-sass', '~> 5.8.1'
   # Datatable
