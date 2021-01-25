@@ -3,7 +3,7 @@ worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
 timeout 60
 preload_app true
 
-listen '/unicorn/sockets/genero.unicorn.sock'
+# listen '/unicorn/sockets/genero.unicorn.sock'
 pid    '/unicorn/pids/genero.unicorn.pid'
 listen 3000
 
