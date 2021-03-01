@@ -28,4 +28,8 @@ class User < ApplicationRecord
     ISO3166::Country[country]
   end
 
+  def is_women_exclusive
+    return organization_type == 'Exclusiva para mujeres'
+  end
+
 end
