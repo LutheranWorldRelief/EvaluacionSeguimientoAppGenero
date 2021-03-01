@@ -43,6 +43,10 @@ class HomeController < ApplicationController
   end
 
   def results
+    @current_survey = params['survey']
+    @user_email = params['user_email']
+    @counter = params['counter']
+    @last_survey_id = Survey.where(status: true).last.id
     respond_to do |format|
       format.html
       format.js
@@ -51,6 +55,17 @@ class HomeController < ApplicationController
   end
 
   def historic
+
+    @survey = find_survey(params['survey'])
+    @user = find_user(params['user_email'])
+    @counter = params['counter']
+
+    @user_answers = UserAnswers.new(@user.email, @survey.id, @counter)
+
+    @sections = Section.where(survey_id: @survey.id).order('id ASC')
+
+    @last_survey_id = Survey.where(status: true).last.id
+
     respond_to do |format|
       format.html
     end
@@ -76,6 +91,18 @@ class HomeController < ApplicationController
   end
 
   private
+    def find_survey(id)
+      return Survey.find(id)
+    end
+
+    def find_user(email)
+      return User.where(email: email).last
+    end
+
+    def find_current_user
+      User.find_by(id:session[:user_id])
+    end
+
     def set_surveys
       @surveys = Survey.find(params[:id])
     end
