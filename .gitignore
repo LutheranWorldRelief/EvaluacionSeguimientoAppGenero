@@ -16,12 +16,13 @@ tmp
 /yarn-error.log
 
 /public/assets
+/public/uploads/*
+
 .byebug_history
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 /.idea/*
-/public/uploads/*
 build.bat
 assets_clean.sh
 assets_compile.sh

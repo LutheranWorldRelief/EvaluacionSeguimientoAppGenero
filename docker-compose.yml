@@ -19,25 +19,13 @@ services:
     env_file:
       - .env.ruby
     command: ./unicorn.sh
+    stdin_open: true
+    tty: true
     volumes:
      - .:/app
      - corus_genero_tmp_cache:/tmp
     depends_on:
       - db
-
-#  web:
-#    image: nginx:latest
-#    ports:
-#      - "8092:80"
-#    volumes:
-#      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-#    volumes_from:
-#      - ruby
-#    depends_on:
-#      - db
-#      - ruby
-#    links:
-#      - ruby
 
 volumes:
   corus_genero_db:
