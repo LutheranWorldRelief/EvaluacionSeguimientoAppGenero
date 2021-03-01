@@ -1,0 +1,1 @@
+@docker exec -it genero_ruby_1 bash -c "bundle exec rake assets:clean --trace"
