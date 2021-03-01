@@ -182,11 +182,11 @@ class UserAnswers
 
   def checkbox_image_by_question_id(question_id)
     cases = {
-      "127" => "/images/igualdad2.png",
-      "128" => "/images/politico.png",
-      "129" => "/images/mujer.png",
-      "130" => "/images/dinero.png",
-      "131" => "/images/garantia.png",
+      "127" => "igualdad2.png",
+      "128" => "politico.png",
+      "129" => "mujer.png",
+      "130" => "dinero.png",
+      "131" => "garantia.png",
     }
 
     cases[question_id.to_s] || ''
