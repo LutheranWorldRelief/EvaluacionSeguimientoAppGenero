@@ -1,0 +1,15 @@
+<% section.questions.order('id ASC').each_with_index  do |question, number| %>
+  <div class="col-12">
+    <br>
+    <h6 class="text-center">
+      <b><i><%= question.question.html_safe rescue "" %></i></b>
+    </h6>
+    <% answer = user_answers.by_section_id_question_id(section.id, question.id) %>
+    <%= render partial: "home/partials/historic_answers_range_piechart", locals: {
+          data: user_answers.piechart_men_women_data_by_answer(answer),
+          colors: user_answers.piechart_colors(),
+          description: user_answers.piechart_description(answer),
+          recommendation: question.recommendation.html_safe,
+       } %>
+  </div>
+<% end %>

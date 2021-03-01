@@ -1,205 +1,103 @@
 <!-- Header container -->
 <%= render "home/partials/navbar" %>
 
-<% @survey = Survey.find(params[:survey]) %>
-<% @user = User.where(email: params[:user_email]).last %>
-<% counter = params[:counter] %>
-
 <!-- Barra de opciones -->
 <div class="container">
 	<div class="row">
 		<div class="col-md-6 offset-md-3 text-center">
 
       <!-- Enlaces -->
-			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Regresar'), records_home_path(survey: params[:survey], user_email: current_user.email), class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
+			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Regresar'),
+                  records_home_path(survey: params[:survey], user_email: current_user.email),
+                  class: "btn btn-secondary",
+                  title:"Regresar a todos los diagnósticos" %>
 
-			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'), home_index_path, class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
+			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'),
+                  home_index_path,
+                  class: "btn btn-secondary",
+                  title:"Regresar a todos los diagnósticos" %>
 
-			<% last_survey = Survey.where(status: true).last.id %>
-			<% if params[:survey].to_i == last_survey.to_i %>
-				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'), results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ), class: "btn bg-orange white-color", title:"Crear PDF de los resultados obtenidos", target: "_blank" %>
+			<% if params[:survey].to_i == @last_survey_id %>
+				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'),
+                    results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ),
+                    class: "btn bg-orange white-color",
+                    title:"Crear PDF de los resultados obtenidos",
+                    target: "_blank" %>
 			<% end %>
 
 		</div>
 	</div>
 </div>
 
-<%= render partial: "home/partials/historic_org_user" %>
+
+
+<%= render partial: "home/partials/historic_org_user", locals: {
+  survey: @survey,
+  user: @user
+} %>
 
 <div class="container">
-	<h4 class="text-center">
-		<br><br>
-		<b>RESULTADOS PRELIMINARES</b>
-		<br><br>
-	</h4>
+  <h4 class="text-center">
+    <br><br>
+    <b>RESULTADOS PRELIMINARES</b>
+    <br><br>
+  </h4>
 </div>
 <div class="container">
-	<div class="row">
-		<!-- Secciones -->
-		<% Section.where(survey_id: params[:survey]).order('id ASC').each_with_index  do |section, sectionIndex| %>
+  <div class="row">
+    <!-- Secciones -->
+    <% @sections.each_with_index  do |section, sectionIndex| %>
 
-			<!-- Variables array -->
-      <% questionType_array = [] %>
-      <% answerQuestion_array = [] %>
-			<% resultType_array = [] %>
-			<% resultAnswer_array = [] %>
-
-			<% section.questions.order('id ASC').each do |question| %><!-- Questions -->
-        <% questionType_array << question.question_type %>
-        <% answers = Answer.where(user_email: @user.email, survey: @survey.id, question_id: question.id, counter: counter )  %>
-        <% answers.each do |answer| %><!-- Answers -->
-          <% answerQuestion_array << answer.answer_question %>
-        <% end %><!-- Answers - END -->
-	   	<% end %><!-- Questions - END -->
-			
-			<!-- Resultados de question array -->
-			<% if (questionType_array.include?("Número") || questionType_array.include?("Moneda") || questionType_array.include?("Decimal")) && questionType_array.include?("Checkbox No data") %>
-
+      <!-- Resultados de question array -->
+      <% if section.is_numeric() %>
         <%= render partial: "home/partials/historic_answers",
-              locals: {
-                answerQuestion_array: answerQuestion_array,
-                sectionIndex: sectionIndex,
-                section: section,
-        } %>
+                   locals: {
+                     sectionIndex: sectionIndex,
+                     section: section,
+                     user_answers: @user_answers,
+                   } %>
 
+        <!-- Rango de Numeros -->
+      <% elsif section.is_range %>
+        <%= render partial: "home/partials/historic_answers_range",
+                   locals: {
+                     section: section,
+                     user_answers: @user_answers,
+                   } %>
 
-			<!-- Rango de Numeros -->
-			<% elsif questionType_array.include?("Rango de Numeros") %>
-				<% Question.where(section_id: section.id).order('id ASC').each_with_index  do |q, number| %>
-					<div class="col-12">
-						<br>
-						<h6 class="text-center"><b><i><%= q.question.html_safe rescue "" %></i></b></h6>
-						<% Answer.where(question_id: q.id).order('id ASC').each do |a| %>
-							<% case a.answer_question %>
-								<% when "1" %>
-									<%= pie_chart [["Hombres", "0"],["Mujeres", "100"]], colors: ["#9FD52E", "#666"], stacked: true  %>
-									<p class="text-center aqua-color"><b>Actividad exclusiva para mujeres</b></p>
-									<br>
-									<p><b>Recomendación:</b></p>
-									<%= q.recommendation.html_safe rescue "" %>
-								<% when "2" %>
-									<%= pie_chart [["Hombres", "25"],["Mujeres", "75"]], colors: ["#9FD52E", "#666"], stacked: true  %>
-									<p class="text-center aqua-color"><b>Actividad donde participan más las mujeres que los hombres</b></p>
-									<br>
-									<p><b>Recomendación:</b></p>
-									<%= q.recommendation.html_safe rescue "" %>
-								<% when "3" %>
-									<%= pie_chart [["Hombres", "50"],["Mujeres", "50"]], colors: ["#9FD52E", "#666"], stacked: true  %>
-									<p class="text-center aqua-color"><b>Actividad donde la participación de hombres y mujeres es equitativa (50/50)</b></p>
-									<br>
-									<p><b>Recomendación:</b></p>
-									<%= q.recommendation.html_safe rescue "" %>
-								<% when "4" %>
-									<%= pie_chart [["Hombres", "75"],["Mujeres", "25"]], colors: ["#9FD52E", "#666"], stacked: true  %>
-									<p class="text-center aqua-color"><b>Actividad donde participan más los hombres que las mujeres</b></p>
-									<br>
-									<p><b>Recomendación:</b></p>
-									<%= q.recommendation.html_safe rescue "" %>
-								<% when "5" %>
-									<%= pie_chart [["Hombres", "100"],["Mujeres", "0"]], colors: ["#9FD52E", "#666"], stacked: true  %>
-									<p class="text-center aqua-color"><b>Actividad exclusiva para hombres</b></p>
-									<br>
-									<p><b>Recomendación:</b></p>
-									<%= q.recommendation.html_safe rescue "" %>
-								<% else %>
-
-								<% end %>
-							<br>
-						<% end %>
-					</div>
-				<% end %>
-			
-			<!-- Checkbox -->
-			<% elsif questionType_array.include?("Checkbox")  %>
-					<% Question.where(section_id: section.id).order('id ASC').each do |qq| %>
-						<div class="col-md-2 lpi-item text-center">
-							<small class="question-item"><%= qq.question.html_safe %></small>
-							<p><b>Resultado:</b></p>
-							<% Answer.where(question_id: qq.id, counter: params[:counter]).order('id ASC').each do |a| %>
-								<% if qq.id == 127 %>
-									<br>
-									<% if a.answer_question == "Confirm" %>
-										<%= image_tag("/images/igualdad2.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons", title: "La organización si cuenta con una estrategia y política de género") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-									<% else %>
-										<%= image_tag("/images/igualdad2.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons gray-img", class:"img-fluid answer-icons", title: "La organización no cuenta con una estrategia y política de género") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-										<br>
-									<% end %>
-								<% elsif qq.id == 128 %>
-									<br>
-									<% if a.answer_question == "Confirm" %>
-										<%= image_tag("/images/politico.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons", class:"img-fluid answer-icons", title: "La organización si esta implementando la política bajo una estrategia de género") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-									<% else %>
-										<%= image_tag("/images/politico.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons gray-img", title: "La organización no esta implementando la política bajo una estrategia de género") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-										<br>
-									<% end %>
-								<% elsif qq.id == 129 %>
-									<br>
-									<% if a.answer_question == "Confirm" %>
-										<%= image_tag("/images/mujer.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons", title: "La organización si cuenta con políticas de crédito diferenciadas para mujeres") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-									<% else %>
-										<%= image_tag("/images/mujer.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons gray-img", title: "La organización no cuenta con políticas de crédito diferenciadas para mujeres") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-									<% end %>
-								<% elsif qq.id == 130 %>
-									<br>
-									<% if a.answer_question == "Confirm" %>
-										<%= image_tag("/images/dinero.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons gray-img", title: "La organización si brinda financiamiento") %>
-										<h6 class="text-center"><b>No se brinda financiamiento</b></h6>
-									<% else %>
-										<%= image_tag("/images/dinero.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons", title: "La organización si brinda financiamiento") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Si se brinda!</b></h6>
-									<% end %>
-								<% elsif qq.id == 131 %>
-									<br>
-									<% if a.answer_question == "Confirm" %>
-										<%= image_tag("/images/garantia.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons", title: "La organización si usa lenguaje inclusivo y sin discriminación en: Estatutos, Reglamentos, Políticas, Actas, Sistemas de Control Interno, Sistemas de Gestion Interna") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-									<% else %>
-										<%= image_tag("/images/garantia.png", alt:"Lutheran World Relief", class:"img-fluid answer-icons gray-img", title: "La organización no usa lenguaje inclusivo y sin discriminación en: Estatutos, Reglamentos, Políticas, Actas, Sistemas de Control Interno, Sistemas de Gestion Interna") %>
-										<br><br>
-										<h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-									<% end %>
-								<% else %>
-
-								<% end %>
-							<% end %>
-							
-							<br><br>
-						</div>
-					<% end %>
-
-			<% else %>
-
-			<% end %>
-		<% end %>
-		<!-- Array de secciones - End -->
-	</div>
+        <!-- Checkbox -->
+      <% elsif section.is_checkbox  %>
+        <%= render partial: "home/partials/historic_answers_checkbox",
+                   locals: {
+                     section: section,
+                     user_answers: @user_answers,
+                   } %>
+      <% end %>
+    <% end %>
+    <!-- Array de secciones - End -->
+  </div>
 </div>
 <br>
 <div class="container">
-	<div class="row">
-		<div class="col-md-6 offset-md-3 text-center">
-			<% last_survey = Survey.where(status: true).last.id %>
-			<% if params[:survey].to_i == last_survey.to_i %>
-				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'), results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ), class: "btn bg-orange white-color", title:"Crear PDF de los resultados obtenidos", target: "_blank" %>
-			<% end %>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-6 offset-md-3 text-center">
+      <% if @survey.id.to_i == @last_survey_id.to_i %>
+        <%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'),
+                    results_home_path(
+                      survey: @survey.id,
+                      user_email: @user.email,
+                      counter: @counter,
+                      format: :pdf
+                    ),
+                    class: "btn bg-orange white-color",
+                    title:"Crear PDF de los resultados obtenidos",
+                    target: "_blank" %>
+      <% end %>
+    </div>
+  </div>
 </div>
 <br><br>
+
 
 <script type="text/javascript">
 	$(document).ready(function(){

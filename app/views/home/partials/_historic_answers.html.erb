@@ -1,76 +1,47 @@
-<!-- Ńúmeros y Checkbox No Data Questions -->
+<!------------------------------------- Ńúmeros y Checkbox No Data Questions -->
+<div class="col-12" style="margin-top: 50px">
+  <h5 class="darkblue-color">
+    <b><%= sectionIndex + 1 %>. <%= section.name %></b>
+  </h5>
+</div>
+<div class="col-12">
+  <h6>
+    Hombres <%= user_answers.section_men(section) %> |
+    Mujeres <%= user_answers.section_women(section) %>
+  </h6>
+</div>
 
-<% @gap_message = 'No brindaste una respuesta a esta pregunta' %>
+<% if user_answers.section_include(section, "No data") %>
 
-<%= render partial: "home/partials/historic_answer_section_title", locals: { index: sectionIndex, name: section.name } %>
+  <%= render partial: "home/partials/historic_answer_data", locals: {
+    data: section.recommendation_no_data.html_safe
+  } %>
 
-<% if answerQuestion_array.include?("No data") %>
+<% elsif user_answers.section_include(section, "Data") %>
 
-  <%= render partial: "home/partials/historic_answer_data", locals: { data: section.recommendation_no_data.html_safe } %>
+  <% if user_answers.section_include(section, "Confirm") %>
 
-<% elsif answerQuestion_array.include?("Data") %>
-
-  <% if answerQuestion_array.include?("Confirm") %>
-
-    <% Question.where(section_id: section.id, question_type: "Checkbox").order('id ASC').each  do |qa| %>
-      <%= render partial: "home/partials/historic_answer_data", locals: { data: qa.question.html_safe } %>
-    <% end %>
-
-  <% elsif answerQuestion_array.include?("No confirm") %>
-
-    <% if answerQuestion_array[0].to_f == 0 && answerQuestion_array[1].to_f == 0 %>
-
-      <%= render partial: "home/partials/historic_answer_data", locals: { data: @gap_message } %>
-
-    <% else %>
-
-      <% @brecha = (((answerQuestion_array[0].to_f-answerQuestion_array[1].to_f)/(answerQuestion_array[0].to_f+answerQuestion_array[1].to_f))*100).to_f %>
-
-      <% if @brecha.to_f >= 0 && @brecha.to_f > (section.gap_max).to_f %>
-        <% @gap_message = section.recommendation_gap_max.html_safe %>
-      <% elsif @brecha.to_f >= 0 && @brecha.to_f >= (section.gap_porcent).to_f  && @brecha.to_f <= (section.gap_max).to_f %>
-        <% @gap_message = section.recommendation.html_safe %>
-      <% elsif @brecha.to_f < 0 %>
-        <% @gap_message = section.recommendation_negative.html_safe %>
-      <% else %>
-        <% @gap_message = "¡Buen trabajo!" %>
-      <% end %>
-
-      <%= render partial: "home/partials/historic_answer_barchart", locals: {
-        porc: section.gap_porcent.to_s,
-        gap: (@brecha).round(1)
+    <% section.questions.where(question_type: "Checkbox").order('id ASC').each  do |qa| %>
+      <%= render partial: "home/partials/historic_answer_data", locals: {
+        data: qa.question.html_safe
       } %>
-      <%= render partial: "home/partials/historic_answer_data", locals: { data: @gap_message } %>
-
     <% end %>
 
   <% else %>
-    <% if answerQuestion_array[0].to_f == 0 && answerQuestion_array[1].to_f == 0 %>
 
-      <%= render partial: "home/partials/historic_answer_data", locals: { data: @gap_message } %>
-
-    <% else %>
-
-      <% @brecha = (((answerQuestion_array[0].to_f-answerQuestion_array[1].to_f)/(answerQuestion_array[0].to_f+answerQuestion_array[1].to_f))*100).to_f %>
-
-      <% if @brecha.to_f >= 0 && @brecha.to_f > (section.gap_max).to_f %>
-        <% @gap_message = section.recommendation_gap_max.html_safe %>
-      <% elsif @brecha.to_f >= 0 && @brecha.to_f >= (section.gap_porcent).to_f  && @brecha.to_f <= (section.gap_max).to_f %>
-        <% @gap_message = section.recommendation.html_safe %>
-      <% elsif @brecha.to_f < 0 %>
-        <% @gap_message = section.recommendation_negative.html_safe %>
-      <% else %>
-        <% @gap_message = "¡Buen trabajo!" %>
-      <% end %>
-
+    <% brecha = user_answers.section_gab(section) %>
+    <% if brecha != false and brecha.to_f > 0 %>
       <%= render partial: "home/partials/historic_answer_barchart", locals: {
-        porc: section.gap_porcent.to_s,
-        gap: (@brecha).round(1)
+        data: user_answers.barchart_gab_avg_real(
+          section.gap_porcent.to_s,
+          brecha.round(1)
+        ),
+        colors: user_answers.barchar_colors()
       } %>
-      <%= render partial: "home/partials/historic_answer_data", locals: { data: @gap_message } %>
-
     <% end %>
-  <% end %>
-<% else %>
 
+    <%= render partial: "home/partials/historic_answer_data", locals: {
+      data: user_answers.section_gab_message(section)
+    } %>
+  <% end %>
 <% end %>

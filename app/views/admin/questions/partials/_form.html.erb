@@ -2,13 +2,27 @@
   <!-- Pregunta -->
   <div class="col-12">
     <br>
-    <%= f.input :question, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Standard' } }, label: "1. Redactar pregunta:", label_html: {class: 'label-input'} %>
+    <%= f.input :question,
+                as: :ckeditor,
+                input_html: { ckeditor: { toolbar: 'Standard' } },
+                label: "1. Redactar pregunta:",
+                label_html: {class: 'label-input'} %>
     <br>
   </div>
   <!-- Descartar pregunta -->
   <div class="col-12 col-md-6">
     <br>
-    <%= f.input :discard_question , priority: [ "No descartar" ], collection: [ "No Descartar", "Solo cuando la organización sea exclusiva de mujeres", "Solo cuando la organización sea exclusiva de hombres" ], label: "2. ¿Descartar pregunta?", label_html: { class: 'label-input'}, input_html: { class: "select2 form-control col-md-12"}, prompt: "-- Seleccione una opción --", required: "required"%>
+    <%= f.input :discard_question ,
+                priority: [ "No descartar" ],
+                collection: [
+                  "No Descartar", "Solo cuando la organización sea exclusiva de mujeres",
+                  "Solo cuando la organización sea exclusiva de hombres"
+                ],
+                label: "2. ¿Descartar pregunta?",
+                label_html: { class: 'label-input'},
+                input_html: { class: "select2 form-control col-md-12"},
+                prompt: "-- Seleccione una opción --",
+                required: "required"%>
     <br>
   </div>
   <!-- Tipo de pregunta -->

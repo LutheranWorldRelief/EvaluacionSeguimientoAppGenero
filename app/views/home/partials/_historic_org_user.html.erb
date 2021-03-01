@@ -1,11 +1,9 @@
-<!-- Datos de la organización y usuario -->
-<% user_email = params[:user_email] %>
-<% date = Answer.where(survey: @survey.id, user_email: user_email).last.created_at %>
+<% date = Answer.where(survey: survey.id, user_email: user.email).last.created_at %>
 
 <div class="container">
   <h4 class="text-center">
     <br><br>
-    <b><%= @survey.name.html_safe rescue "" %></b>
+    <b><%= survey.name.html_safe rescue "" %></b>
     <br>
   </h4>
   <h6 class="text-center">
@@ -13,15 +11,15 @@
     <br><br>
   </h6>
   <h5 class="text-center darkblue-color">
-    <b><%= @user.organization_name %></b>
+    <b><%= user.organization_name %></b>
     <br>
     <br>
   </h5>
   <div class="row">
     <% partial = "home/partials/historic_org_user_field" %>
-    <%= render partial: partial, locals: { title: '1. Representante de la Organización', value: @user.name } %>
-    <%= render partial: partial, locals: { title: '2. Correo electrónico', value: @user.email } %>
-    <%= render partial: partial, locals: { title: '3. País', value: @user.country_name } %>
-    <%= render partial: partial, locals: { title: '4. Número de teléfono', value: "#{@user.zipcode} #{@user.phone_number}" } %>
+    <%= render partial: partial, locals: { title: '1. Representante de la Organización', value: user.name } %>
+    <%= render partial: partial, locals: { title: '2. Correo electrónico', value: user.email } %>
+    <%= render partial: partial, locals: { title: '3. País', value: user.country_name } %>
+    <%= render partial: partial, locals: { title: '4. Número de teléfono', value: "#{user.zipcode} #{user.phone_number}" } %>
   </div>
 </div>

@@ -1,0 +1,8 @@
+<% cssClass = 'img-fluid answer-icons ' + (confirm ? '' : 'gray-img') %>
+<% message = confirm ? '¡Buen trabajo!' : '¡Se necesita mejorar!' %>
+<% title = confirm ? title_yes : title_no%>
+
+<br>
+<%= image_tag(image, alt:"Lutheran World Relief", class:cssClass, title: title) %>
+<br><br>
+<h6 class="text-center"><b><%=message %></b></h6>

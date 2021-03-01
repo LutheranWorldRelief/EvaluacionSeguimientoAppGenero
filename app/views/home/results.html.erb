@@ -9,12 +9,10 @@
 			<!-- Enlaces -->
 			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'), home_index_path, class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
 
-			<% last_survey = Survey.where(status: true).last.id %>
-			<% if params[:survey].to_i == last_survey.to_i %>
-				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'), results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ), class: "btn bg-orange white-color", title:"Crear PDF de los resultados obtenidos", target: "_blank" %>
+			<% if @current_survey.to_i == @last_survey_id.to_i %>
+				<%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'), results_home_path(survey: params[:survey], user_email: @user_email, counter: @counter, format: :pdf ), class: "btn bg-orange white-color", title:"Crear PDF de los resultados obtenidos", target: "_blank" %>
 			<% else %>
-				<% next_id = params[:survey] %>
-				<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Ir al siguiente eje'), home_path(next_id.to_i+1),  class:"btn btn-primary" %>
+				<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Ir al siguiente eje'), home_path(@current_survey.to_i+1),  class:"btn btn-primary" %>
 			<% end %>
 
 		</div>

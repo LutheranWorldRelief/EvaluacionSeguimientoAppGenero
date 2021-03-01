@@ -1,0 +1,15 @@
+<% section.questions.order('id ASC').each_with_index  do |question| %>
+  <div class="col-md-2 lpi-item text-center">
+    <small class="question-item"><%= question.question.html_safe %></small>
+    <p><b>Resultado:</b></p>
+    <% answer = user_answers.by_section_id_question_id(section.id, question.id) %>
+    <%= render partial: "home/partials/historic_answers_checkbox_image",
+                   locals: {
+                     confirm: answer == "Confirm",
+                     image: user_answers.checkbox_image_by_question_id(question.id),
+                     title_yes: user_answers.checkbox_title_yes_by_question_id(question.id),
+                     title_no: user_answers.checkbox_title_no_by_question_id(question.id),
+                   } %>
+    <br><br>
+  </div>
+<% end %>
