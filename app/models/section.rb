@@ -19,4 +19,33 @@
 class Section < ApplicationRecord
 	belongs_to :survey, required: true
 	has_many :questions, dependent: :destroy
+
+	def question_types
+		values = [];
+		questions.each do | question |
+			values << question.question_type
+		end
+		return values
+	end
+
+	def is_numeric
+		questionTypes = question_types()
+
+		(questionTypes.include?("Número") ||
+			questionTypes.include?("Moneda") ||
+			questionTypes.include?("Decimal")) && questionTypes.include?("Checkbox No data")
+	end
+
+	def is_range
+		questionTypes = question_types()
+
+		(questionTypes.include?("Rango de Numeros"))
+	end
+
+	def is_checkbox
+		questionTypes = question_types()
+
+		(questionTypes.include?("Checkbox"))
+	end
+
 end
