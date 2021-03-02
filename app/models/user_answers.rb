@@ -79,7 +79,7 @@ class UserAnswers
   end
 
   def section_id_gab(section_id)
-    unless section_id_include(section_id, "Data") and section_id_include(section_id, "No confirm")
+    unless section_id_include(section_id, "Data") and section_id_include(section_id, "Confirm")
       men = section_id_men(section_id)
       women = section_id_women(section_id)
       if men != nil and women != nil and (men.to_f + women.to_f) > 0
@@ -89,6 +89,14 @@ class UserAnswers
       end
     end
     false
+  end
+
+  def section_id_gab_formatted(section_id)
+    brecha = section_id_gab(section_id)
+    if brecha == false
+      return "SIN BRECHA"
+    end
+    brecha.to_f.round(2).to_s + "%"
   end
 
 
