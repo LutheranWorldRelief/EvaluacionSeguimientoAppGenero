@@ -1,10 +1,28 @@
 <div class="d-flex flex-column flex-md-row align-items-center bg-white border-bottom shadow-sm">
 	<div class="my-0 mr-md-auto font-weight-normal text-left">
-		<%= link_to image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"col-12 col-md-7"), "/" %>
+		<%= link_to image_tag("lwr-logotag.png",
+                          alt:"Lutheran World Relief",
+                          class:"col-12 col-md-7"), "/" %>
 	</div>
-  <%= link_to "<i class='fas fa-clipboard-list'></i>&nbsp;&nbsp;Ver Encuestas".html_safe, home_index_path, target: "_blank", class: "btn btn-outline-primary" %>
-  <%= link_to "<i class='fas fa-tools'></i>&nbsp;&nbsp;Administrar Encuestas".html_safe, admin_surveys_path, class: "btn btn-outline-primary" %>
-  <%= link_to "<i class='fas fa-file-pdf'></i>&nbsp;&nbsp;Administrar Guías".html_safe, admin_guides_path, class: "btn btn-outline-primary" %>
-  <%= link_to "<i class='fas fa-users'></i>&nbsp;&nbsp;Administrar Usuarios".html_safe, admin_admins_path, class: "btn btn-outline-primary" %>
-	<%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Cerrar Sesión".html_safe, destroy_admin_session_path, method: :delete, class: "btn btn-outline-primary" %>
+  <%= link_to "<i class='fas fa-clipboard-list'></i>&nbsp;&nbsp;Ver Encuestas".html_safe,
+              home_index_path,
+              target: "_blank",
+              class: "btn btn-outline-primary" %>
+
+  <%= link_to "<i class='fas fa-tools'></i>&nbsp;&nbsp;Administrar Encuestas".html_safe,
+              admin_surveys_path,
+              class: "btn btn-outline-primary" %>
+
+  <%= link_to "<i class='fas fa-file-pdf'></i>&nbsp;&nbsp;Administrar Guías".html_safe,
+              admin_guides_path,
+              class: "btn btn-outline-primary" %>
+
+  <%= link_to "<i class='fas fa-users'></i>&nbsp;&nbsp;Administrar Usuarios".html_safe,
+              admin_admins_path,
+              class: "btn btn-outline-primary" %>
+
+  <%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Cerrar Sesión".html_safe,
+              destroy_admin_session_path,
+              method: :delete,
+              class: "btn btn-outline-primary" %>
 </div>
