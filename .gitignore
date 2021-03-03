@@ -30,3 +30,5 @@ unicorn-kill.sh
 
 .env.pg
 .env.ruby
+
+yarn.lock
