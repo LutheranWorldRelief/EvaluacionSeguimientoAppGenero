@@ -13,7 +13,7 @@
 
   <style type="text/css">
 
-    // Grafics
+    /*Grafics*/
     .lightblue-chart { fill: #31b5b5 !important; }
     .red-chart { fill: #FF0051 !important; }
     .blue-chart { fill: #1E4051 !important; }
@@ -103,7 +103,7 @@
       <% Survey.where(status: true).order('id ASC').each_with_index  do |survey, index_of| %>
       <% ans_array = [] %>
       <!-- Survey name -->
-      <h4 class="text-center" style="text-transform: uppercase; padding: 2rem; margin-bottom: 2rem; margin-top: 2rem; color">
+      <h4 class="text-center" style="text-transform: uppercase; padding: 2rem; margin-bottom: 2rem; margin-top: 2rem;">
         <b>
           <%= index_of+1 %>. <%= Survey.where(id: survey.id).last.name.html_safe rescue "" %>
         </b>
