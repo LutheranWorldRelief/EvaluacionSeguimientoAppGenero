@@ -13,9 +13,29 @@ Gender app project developed for gender equity and equal opportunities for women
 
 ### Create ENV files
 
-  > touch .env.pg
+> touch .env.pg
 
-  > touch .env.ruby
+    POSTGRES_USER=postgres
+    POSTGRES_PASSWORD=postgres
+    DB_NAME=genero
+    DB_RESTORE_FILE=genero.sql
+
+> touch .env.ruby
+
+    SPROCKETS_CACHE=/cache
+    APP_DATABASE_NAME=genero
+    APP_DATABASE_NAME_DEV=genero_test
+    APP_DATABASE_NAME_TEST=genero_test
+    APP_DATABASE_USERNAME=postgres
+    APP_DATABASE_PASSWORD=postgres
+    POSTGRES_PASSWORD=postgres
+    RAILS_MAX_THREADS=5
+
+    # comment if you are in production env
+    RAILS_ENV=development
+
+    # comment if you are in development mode
+    #RAILS_ENV=production
 
 ### First install Postgresql
 
@@ -88,7 +108,7 @@ Gender app project developed for gender equity and equal opportunities for women
 
 ### Reload Apache2
   >
-  /etc/init.d/apache2 reload
+    /etc/init.d/apache2 reload
   
 ### Clone the project in /var/www/html
   > 
