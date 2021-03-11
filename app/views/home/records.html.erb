@@ -1,27 +1,23 @@
 
 <!-- Header container -->
 <%= render "home/partials/navbar"%>
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-12 col-md-4 offset-md-4 text-center">
-			<%= link_to raw('<i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Todos los diagnósticos'), home_index_path, class: "btn btn-secondary", title:"Regresar a todos los diagnósticos" %>
-		</div>
-	</div>
-</div>
 <div class="container">
-	<div class="row">
-		<div class="col-12 text-center">
-			<h4>
-				<br><br>
-				<% survey_name = Survey.where(id: params['survey']).first.name %>
-				<b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= survey_name %></b>
-				<br><br>
-			</h4>
-			<h5 class="text-center"><i>Respuestas anteriores</i></h5>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-lg-10">
+      <h4 class="darkblue-color">
+        <% survey_name = Survey.where(id: params['survey']).first.name %>
+        <b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= survey_name %> /</b> <small>Respuestas anteriores</small>
+      </h4>
+    </div>
+    <div class="col-lg-2 text-right">
+      <%= link_to raw('<i class="fas fa-list"></i> Diagnósticos'),
+                  home_index_path,
+                  class: "btn btn-secondary",
+                  title:"Regresar a todos los diagnósticos" %>
+    </div>
+  </div>
 </div>
-<br>
+<hr style="margin-bottom: 50px">
 <div class="container">
 	<div class="row">
 			<% unless @answers.blank? %>

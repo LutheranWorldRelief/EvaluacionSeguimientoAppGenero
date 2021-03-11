@@ -1,8 +1,19 @@
 <!-- Header container -->
 <%= render "home/partials/navbar"%>
 
+<% unless user_signed_in? %>
 <div class="container">
-	<br><br>	
+  <div class="row">
+    <div class="col-md-4 offset-md-4 text-center">
+      <br>
+      <%= link_to( image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid"), home_index_path) %>
+      <br><br>
+    </div>
+  </div>
+</div>
+<% end %>
+<div class="container">
+  <br><br>
 	<h4 class="text-center"><b>CAJA DE HERRAMIENTAS DE GÉNERO</b></h4>
 	<h6 class="text-center"><i>¡Construyendo comunidades equitativas y prósperas!</i></h6>
 	<br>

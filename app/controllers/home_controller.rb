@@ -44,7 +44,7 @@ class HomeController < ApplicationController
 
   def results
     @current_survey = params['survey']
-    @user_email = params['user_email']
+    @user_email = current_user.email
     @counter = params['counter']
     @last_survey_id = Survey.where(status: true).last.id
     respond_to do |format|
@@ -57,7 +57,7 @@ class HomeController < ApplicationController
   def historic
 
     @survey = find_survey(params['survey'])
-    @user = find_user(params['user_email'])
+    @user = current_user
     @counter = params['counter']
 
     @user_answers = UserAnswers.new(@user.email, @survey.id, @counter)

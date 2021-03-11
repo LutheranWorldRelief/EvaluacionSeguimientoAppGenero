@@ -1,18 +1,19 @@
 <!-- Menú principal -->
-<div class="container">
-	<div class="row">
-		<div class="col-md-6 offset-md-6 text-right">
-			<%= link_to "<i class='fa fa-id-card-alt' aria-hidden='true'></i> Sobre nosotros".html_safe,
+<div class="container" style="margin-bottom: 20px">
+  <nav class="navbar navbar-light bg-light justify-content-between" style="background: none !important;">
+    <%= link_to( image_tag("corus_lwr.svg", alt:"Lutheran World Relief", height:"30", class:"d-inline-block align-top"), home_index_path, class:'navbar-brand') %>
+    <span>
+      <%= link_to "<i class='fa fa-id-card-alt' aria-hidden='true'></i> Sobre nosotros".html_safe,
                   "https://lwr.org/about-lwr",
                   class: "btn btn-outline-primary",
                   target: "_blank" %>
 
-			<%= link_to "<i class='fa fa-envelope-open' aria-hidden='true'></i> Contactanos".html_safe,
+      <%= link_to "<i class='fa fa-envelope-open' aria-hidden='true'></i> Contactanos".html_safe,
                   "https://lwr.org/contact-us",
                   class: "btn btn-outline-primary",
                   target: "_blank" %>
 
-			<% if !user_signed_in? %>
+      <% if !user_signed_in? %>
         <%= link_to "<i class='fa fa-user' aria-hidden='true'></i> Iniciar sesión".html_safe,
                     new_user_session_path,
                     class: "btn btn-outline-primary" %>
@@ -21,26 +22,17 @@
                     '/admins/sign_in',
                     class: "btn btn-outline-primary" %>
       <% else %>
-				<%= link_to "<i class='fa fa-user'></i> Perfil".html_safe,
+        <%= link_to "<i class='fa fa-user'></i> Perfil".html_safe,
                     edit_user_home_index_path,
                     class: "btn btn-outline-primary",
                     remote: true %>
 
-				<%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Salir".html_safe,
+        <%= link_to "<i class='fa fa-sign-out-alt' aria-hidden='true'></i> Salir".html_safe,
                     destroy_user_session_path,
                     method: :delete,
                     class: "btn btn-outline-primary" %>
-			<% end %>
-		</div>
-	</div>
-</div>
-<div class="container">
-	<div class="row">
-		<div class="col-md-4 offset-md-4 text-center">
-			<br>
-			<%= link_to( image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid"), home_index_path) %>
-			<br><br>
-		</div>
-	</div>
+      <% end %>
+    </span>
+  </nav>
 </div>
 <div id="profile_edit"></div>
