@@ -30,7 +30,7 @@
 				<% answer_exist = Answer.where(user_email: current_user.email, survey: s.id).group_by(&:counter) %>
 				<div class="col-md-6 survey-item hvr-pulse">
 			    <div class="row no-gutters border overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-ligthgray">
-			    	<div class="col-md-4 d-none d-lg-block text-center">
+			    	<div class="col-md-4 d-none d-lg-block text-center" style="padding: 25px;">
 			    		<%= image_tag("survey.png", alt:"Icono de Diagnóstico", class:"img-fluid") %>
 			        <!--<h1 class="survey-img darkblue-color text-right"><i class="fas fa-clipboard-list"></i></h1>-->
 			      </div>
