@@ -9,6 +9,6 @@ fi
 if [ "${RAILS_ENV}" = "production" ]
 then
   echo "Starting unicorn"
-  unicorn -c config/unicorn.rb -E production
+  rm -f /unicorn/pids/genero.unicorn.pid && unicorn -c config/unicorn.rb -E production
 fi
 
