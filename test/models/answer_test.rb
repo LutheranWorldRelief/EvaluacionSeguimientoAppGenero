@@ -9,6 +9,7 @@
 #  question_id     :bigint
 #  user_email      :string
 #  survey          :string
+#  counter         :integer
 #
 
 require 'test_helper'

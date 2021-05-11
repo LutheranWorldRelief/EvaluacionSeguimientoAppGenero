@@ -15,6 +15,7 @@
 #  country                :string
 #  organization_name      :string
 #  zipcode                :string
+#  organization_type      :string
 #
 
 class User < ApplicationRecord
@@ -30,6 +31,10 @@ class User < ApplicationRecord
 
   def is_women_exclusive
     return organization_type == 'Exclusiva para mujeres'
+  end
+
+  def is_men_exclusive
+    return organization_type == 'Exclusiva para hombres'
   end
 
 end

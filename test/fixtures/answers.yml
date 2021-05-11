@@ -9,6 +9,7 @@
 #  question_id     :bigint
 #  user_email      :string
 #  survey          :string
+#  counter         :integer
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

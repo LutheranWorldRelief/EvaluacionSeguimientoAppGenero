@@ -15,6 +15,7 @@
 #  country                :string
 #  organization_name      :string
 #  zipcode                :string
+#  organization_type      :string
 #
 
 require 'test_helper'

@@ -15,6 +15,7 @@
 #  country                :string
 #  organization_name      :string
 #  zipcode                :string
+#  organization_type      :string
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
