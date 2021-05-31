@@ -1,3 +1,4 @@
+<% render_format = ((local_variables.include?(:render_format) ? render_format : 'html')) %>
 <% section.questions.order('id ASC').each_with_index  do |question| %>
   <div class="col-md-2 lpi-item text-center">
     <small class="question-item"><%= question.question.html_safe %></small>
@@ -9,6 +10,7 @@
                      image: user_answers.checkbox_image_by_question_id(question.id),
                      title_yes: user_answers.checkbox_title_yes_by_question_id(question.id),
                      title_no: user_answers.checkbox_title_no_by_question_id(question.id),
+                     render_format: render_format,
                    } %>
     <br><br>
   </div>

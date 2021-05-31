@@ -1,0 +1,30 @@
+<%
+# @type section [Section]
+# @type current_user [User]
+# @type answers [Array<Answer>]
+answers = section.answers_idx
+%>
+
+<tr id="<%= "section#{section.id}" %>">
+  <td class="col-12 bd-lightblue2 survey_section" colspan="4	">
+    <b><%= section.name %></b>
+  </td>
+</tr>
+<%
+# @type question [Question]
+section.questions.order('id ASC').each_with_index do |question, index|
+  visible =  !(
+    current_user.is_women_exclusive && question.discard_when_women ||
+    current_user.is_men_exclusive && question.discard_when_mem
+  )
+%>
+<%= render partial: "home/partials/show_form_section_question",
+             locals: {
+               index: index,
+               section: section,
+               question: question,
+               answer: answers[question.id],
+               visible:visible,
+               form: form
+             } %>
+<% end %>

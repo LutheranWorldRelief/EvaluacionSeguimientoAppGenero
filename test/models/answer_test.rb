@@ -10,6 +10,8 @@
 #  user_email      :string
 #  survey          :string
 #  counter         :integer
+#  diagnostic_id   :bigint
+#  survey_id       :bigint
 #
 
 require 'test_helper'

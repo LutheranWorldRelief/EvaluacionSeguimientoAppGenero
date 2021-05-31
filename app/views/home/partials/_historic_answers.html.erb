@@ -13,7 +13,6 @@
 
   </h6>
 </div>
-
 <% if user_answers.section_include(section, "No data") %>
 
   <%= render partial: "home/partials/historic_answer_data", locals: {
@@ -39,7 +38,8 @@
           section.gap_porcent.to_s,
           brecha.round(1)
         ),
-        colors: user_answers.barchar_colors()
+        colors: user_answers.barchar_colors(),
+        render_format: local_variables.include?(:render_format) ? render_format : 'html',
       } %>
     <% end %>
 

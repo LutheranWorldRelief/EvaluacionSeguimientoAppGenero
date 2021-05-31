@@ -5,8 +5,7 @@
   <div class="row">
     <div class="col-lg-10">
       <h4 class="darkblue-color">
-        <% survey_name = Survey.where(id: params['survey']).first.name %>
-        <b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= survey_name %> /</b> <small>Respuestas anteriores</small>
+        <b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= @survey.name %> /</b> <small>Respuestas anteriores</small>
       </h4>
     </div>
     <div class="col-lg-2 text-right">
@@ -25,13 +24,13 @@
 					<div class="col-sm-3">
 				    <div class="card">
 				      <div class="card-body text-center bg-ligthgray">
-				        <h6 class="card-title"><b>Resultado <%= index+1 %></b></h6>
+				        <h6 class="card-title"><b>Preliminar <%= index+1 %></b></h6>
 				        <% b = a[1][0,1] %>
 				        <%= b.first.created_at.strftime('%d-%m-%Y') %>
 				        <br><br>
 				        <%= link_to( image_tag("research.png", alt:"", class:"img-fluid", width: "150px"), historic_home_path(survey: params['survey'], user_email: params['user_email'], counter: b.first.counter)) %>
 				        <br><br>
-				        <%= link_to "Ver resultados", historic_home_path(survey: params['survey'], user_email: params['user_email'], counter: b.first.counter), :class => "btn btn-primary" %>
+				        <%= link_to "Ver resultados", historic_home_path(survey_id: @survey.id, counter: b.first.counter), :class => "btn btn-primary" %>
 				      </div>
 				    </div>
 				  </div>

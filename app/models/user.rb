@@ -24,6 +24,13 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  has_many :diagnostics, -> { order 'created_at DESC' }
+  has_one :admin, primary_key: 'email', foreign_key: 'email'
+
+  def is_admin
+    !!admin
+  end
+
   def country_name
     country = self.country
     ISO3166::Country[country]

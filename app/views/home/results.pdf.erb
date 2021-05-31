@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<head>
   <meta charset="utf-8" />
   <title>Resultados</title>
   
@@ -25,10 +26,29 @@
     .normal g rect:nth-child(2) { fill: #1E4051 !important; }
     .answer-icons { width: 100px; }
 
+    .gray-img {
+        -webkit-filter: grayscale(1) !important;
+        -moz-filter: grayscale(1);
+        -ms-filter: grayscale(1);
+        -o-filter: grayscale(1);
+        filter: gray !important;
+    }
+
     table { margin-left: 2rem; margin-right: 2rem; }
     td { border: 0px !important; }
 
     .result { margin-bottom: 2rem; }
+
+    @media print {
+
+        .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        .new-page {
+            page-break-before: always;
+        }
+    }
 
   </style>
 
@@ -51,8 +71,10 @@
     <br>
     <b>RESULTADOS OBTENIDOS</b>
   </h5>
-  <% @date = Answer.where(survey: params[:survey], user_email: params[:user_email], counter: params[:counter]).last.created_at %>
-    <h6 class="text-center">Fecha: <b><%= @date.strftime("%d-%m-%Y") %></b></h6>
+  <% @date = @diagnostic.created_at %>
+  <h6 class="text-center">
+    Fecha: <b><%= @date.strftime("%d-%m-%Y") %></b>
+  </h6>
 </div>
 <div class="container">
   <br>
@@ -65,337 +87,87 @@
       <tr>
         <td class="text-left">
           <h6>1. Nombre de la organización:</h6>
-          <h6 class="text-left darkblue-color"><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.organization_name %></b></h6>
+          <h6 class="text-left darkblue-color"><b>&nbsp;&nbsp;&nbsp;<%= @user.organization_name %></b></h6>
         </td>
         <td class="text-left">
           <h6>2. Tipo de organización:</h6>
-          <h6 class="text-left darkblue-color"><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.organization_type %></b></h6>
+          <h6 class="text-left darkblue-color"><b>&nbsp;&nbsp;&nbsp;<%= @user.organization_type %></b></h6>
         </td>
         <td class="text-left">
           <h6>3. País</h6>
-          <h6><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.country_name %></b></h6>
+          <h6><b>&nbsp;&nbsp;&nbsp;<%= @user.country_name %></b></h6>
         </td>
       </tr>
       <tr>
         <td class="text-left">
           <h6>4. Representante de la Organización</h6>
-          <h6><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.name %></b></h6>
+          <h6><b>&nbsp;&nbsp;&nbsp;<%= @user.name %></b></h6>
         </td>
         <td class="text-left">
           <h6>5. Correo electrónico</h6>
-          <h6><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.email %></b></h6>
+          <h6><b>&nbsp;&nbsp;&nbsp;<%= @user.email %></b></h6>
         </td>
         <td class="text-left">
           <h6>6. Número de teléfono</h6>
-          <% @phone = User.where(email: params[:user_email]).last.phone_number %>
-          <% if @phone.nil? %>
-            <h6><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.zipcode %> <%= User.where(email: params[:user_email]).last.phone_number %></b></h6>
-          <% else %>
-            <h6><b>&nbsp;&nbsp;&nbsp;<%= User.where(email: params[:user_email]).last.zipcode %> <%= User.where(email: params[:user_email]).last.phone_number %></b></h6>
-          <% end %>
+          <h6><b>&nbsp;&nbsp;&nbsp;<%= @user.zipcode %> <%= @user.phone_number %></b></h6>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+
+
 <div class="container">
   <div style="margin-left: 2rem; margin-right: 2rem;">
-      <% Survey.where(status: true).order('id ASC').each_with_index  do |survey, index_of| %>
-      <% ans_array = [] %>
-      <!-- Survey name -->
-      <h4 class="text-center" style="text-transform: uppercase; padding: 2rem; margin-bottom: 2rem; margin-top: 2rem;">
-        <b>
-          <%= index_of+1 %>. <%= Survey.where(id: survey.id).last.name.html_safe rescue "" %>
-        </b>
+    <!-- Survey - BEGIN -->
+    <% Survey.where(status: true).order('id ASC').each_with_index  do |survey, index_of| %>
+
+      <h4 class="text-center" style="text-transform: uppercase; padding: 2rem;">
+        <b><%= index_of+1 %>. <%= survey.name.html_safe rescue "" %></b>
       </h4>
-      
-      <% Answer.where(survey: survey.id, user_email: params[:user_email], counter: params[:counter]).each do |ans| %>
-        <% ans_array << ans.answer_question %>
-      <% end %>
 
-      <% if ans_array.empty? %>
-        <div class="text-center">
-          <p text-center>Diagnóstico aun no realizado</p>
-          <br>
-        </div>
-      <% end %>
-      
-      <!-- Secciones -->
-      <% Section.where(survey_id: survey.id).order('id ASC').each_with_index  do |s, i| %>
+      <% user_answers = UserAnswers.new(@user.email, survey.id, @diagnostic.id) %>
+      <!-- Section - BEGIN -->
+      <% sections = Section.where(survey_id: survey.id).order('id ASC') %>
+      <% sections.each_with_index  do |section, sectionIndex| %>
+          <!-- Results - BEGIN -->
+          <% if section.is_numeric() %>
+            <%= render partial: "home/partials/historic_answers",
+                       :formats => [:html, :pdf],
+                       locals: {
+                         sectionIndex: sectionIndex,
+                         section: section,
+                         user_answers: user_answers,
+                         render_format: 'pdf',
+                       } %>
 
-        <!-- Variables array -->
-        <% answerQuestion_array = [] %>
-        <% questionType_array = [] %>
-        <% resultType_array = [] %>
-        <% resultAnswer_array = [] %>
+            <!-- Rango de Numeros -->
+          <% elsif section.is_range %>
+            <%= render partial: "home/partials/historic_answers_range",
+                       locals: {
+                         section: section,
+                         user_answers: user_answers,
+                         render_format: 'pdf',
+                       } %>
 
-        <!-- Preguntas -->
-        <% Question.where(section_id: s.id).order('id ASC').each  do |q| %>
-          
-          <!-- answer array -->
-            <% questionType_array << q.question_type %>
-
-          <!-- Array de respuestas - Begin -->
-            <% Answer.where(question_id: q.id, counter: params[:counter]).order('id ASC').each do |a| %>
-
-            <!-- Asignando los resultados al array_answer -->
-            <% answerQuestion_array << a.answer_question %>
-
+            <!-- Checkbox -->
+          <% elsif section.is_checkbox  %>
+            <%= render partial: "home/partials/historic_answers_checkbox",
+                       locals: {
+                         section: section,
+                         user_answers: user_answers,
+                         render_format: 'pdf',
+                       } %>
           <% end %>
-        <% end %>
-
-        <!-- Resultados de question array -->
-        <% if questionType_array.include?("Número") || questionType_array.include?("Moneda") || questionType_array.include?("Decimal") && questionType_array.include?("Checkbox No data")  %>
-
-          <!-- Ńúmeros y Checkbox No Data Questions -->
-          <% if answerQuestion_array.include?("No data") %>
-          <div class="result">
-            <!-- Nombre de la sección -->
-            <h5 class="" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= i+1 %>. <%= s.name %></b></h5>
-            <%= s.recommendation_no_data.html_safe rescue "" %>
-          </div>
-          <% elsif answerQuestion_array.include?("Data") %>
-            <div class="result">
-              <% if answerQuestion_array.include?("Confirm") %>
-                <% Question.where(section_id: s.id, question_type: "Checkbox").order('id ASC').each  do |qa| %>
-                  <!-- Nombre de la sección -->
-                  <h5 class="" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= i+1 %>. <%= s.name %></b></h5>
-                  <h5 class="text-left"><%= qa.question.html_safe rescue "" %></h5>
-                  <br>
-                <% end %>
-              <% elsif answerQuestion_array.include?("No confirm") %>
-                <% if answerQuestion_array[0].to_f == 0 && answerQuestion_array[1].to_f == 0 %>
-                  <!-- Nombre de la sección -->
-                  <h5 class="" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= i+1 %>. <%= s.name %></b></h5>
-                  <h5 class="text-left"><small>Ambas cantidades son igual a cero por favor verifique los datos</small></h5>
-                  <br>
-                <% else %>
-                  <!-- Nombre de la sección -->
-                  <h5 class="" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= i+1 %>. <%= s.name %></b></h5>
-                  <!-- Calculo -->
-                  <% @brecha = (((answerQuestion_array[0].to_f-answerQuestion_array[1].to_f)/(answerQuestion_array[0].to_f+answerQuestion_array[1].to_f))*100).to_f %>
-
-                  <!-- Mensaje de alerta_-->
-                  <% if @brecha.to_f >= 0 && @brecha.to_f > (s.gap_max).to_f %>
-                    <div class="max">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                        <br>
-                        <%= s.recommendation_gap_max.html_safe rescue "" %>
-                        <br><br>
-                    </div>
-                  <% elsif @brecha.to_f >= 0 && @brecha.to_f >= (s.gap_porcent).to_f  && @brecha.to_f <= (s.gap_max).to_f %>
-                    <div class="normal">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <%= s.recommendation.html_safe %>
-                      <br><br>
-                    </div>
-                  <% elsif @brecha.to_f < 0 %>
-                    <div class="negative">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <%= s.recommendation_negative.html_safe rescue "" %>
-                      <br><br>
-                    </div>
-                  <% else %>
-                    <div class="ideal">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <h5 class="text-center"><b>¡Buen trabajo!</b></h5>
-                      <br><br>
-                    </div>
-                  <% end %>
-                <% end %>
-              
-              <% else %>
-                <% if answerQuestion_array[0].to_f == 0 && answerQuestion_array[1].to_f == 0 %>
-                  <!-- Nombre de la sección -->
-                  <h5 class="" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= i+1 %>. <%= s.name %></b></h5>
-                  <h5 class="text-left"><small>Ambas cantidades son igual a cero por favor verifique los datos</small></h5>
-                  <br>
-                <% else %>
-                  <!-- Nombre de la sección -->
-                  <h5 class="" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= i+1 %>. <%= s.name %></b></h5>
-                  <!-- Calculo -->
-                  <% @brecha = (((answerQuestion_array[0].to_f-answerQuestion_array[1].to_f)/(answerQuestion_array[0].to_f+answerQuestion_array[1].to_f))*100).to_f %>
-
-                  <!-- Mensaje de alerta_-->
-                  <% if @brecha.to_f >= 0 && @brecha.to_f > (s.gap_max).to_f %>
-                    <div class="max">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <%= s.recommendation_gap_max.html_safe rescue "" %>
-                      <br><br>
-                    </div>
-                  <% elsif @brecha.to_f >= 0 && @brecha.to_f >= (s.gap_porcent).to_f  && @brecha.to_f <= (s.gap_max).to_f %>
-                    <div class="normal">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <%= s.recommendation.html_safe %>
-                      <br><br>
-                    </div>
-                  <% elsif @brecha.to_f < 0 %>
-                    <div class="negative">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <%= s.recommendation_negative.html_safe rescue "" %>
-                      <br><br>
-                    </div>
-                  <% else %>
-                    <div class="ideal">
-                      <!-- Gráfico -->
-                      <h6 class="text-center"><b>BRECHAS</b></h6>
-                      <%= bar_chart [["IDEAL (%)", s.gap_porcent.to_s],["OBTENIDA (%)", (@brecha).round(1)]], colors: ["#9FD52E", "#666"], stacked: true, width: "900px" %>
-                      <br>
-                      <h5 class="text-center"><b>¡Buen trabajo!</b></h5>
-                      <br><br>
-                    </div>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </div>
-            <br>
-          <% else %>
-
-          <% end %>
-
-
-        <!-- Rango de Numeros -->
-        <% elsif questionType_array.include?("Rango de Numeros") %>
-          <% Question.where(section_id: s.id).order('id ASC').each_with_index  do |q, number| %>
-            <div class="result">
-              <br>
-              <div class="ext-center">
-                <% Answer.where(question_id: q.id, counter: params[:counter]).order('id ASC').each do |a| %>
-                  <h5 class="text-center" style="text-transform: uppercase; color: #1E4051; text-align: left !important; font-style:normal !important; "><b><%= q.question.html_safe rescue "" %></b></h5>
-                  <% case a.answer_question %>
-                    <% when "1" %>
-                      <%= pie_chart [["Hombres", "0"],["Mujeres", "100"]], colors: ["#9FD52E", "#666"], stacked: true, width: "1024px"  %>
-                      <p class="text-center aqua-color"><b>Actividad exclusiva para mujeres</b></p>
-                      <br>
-                      <p><b>Recomendación:</b></p>
-                      <%= q.recommendation.html_safe rescue "" %>
-                    <% when "2" %>
-                      <%= pie_chart [["Hombres", "25"],["Mujeres", "75"]], colors: ["#9FD52E", "#666"], stacked: true, width: "1024px"  %>
-                      <p class="text-center aqua-color"><b>Actividad donde participan más las mujeres que los hombres</b></p>
-                      <br>
-                      <p><b>Recomendación:</b></p>
-                      <%= q.recommendation.html_safe rescue "" %>
-                    <% when "3" %>
-                      <%= pie_chart [["Hombres", "50"],["Mujeres", "50"]], colors: ["#9FD52E", "#666"], stacked: true, width: "1024px"  %>
-                      <p class="text-center aqua-color"><b>Actividad donde la participación de hombres y mujeres es equitativa (50/50)</b></p>
-                      <br>
-                      <p><b>Recomendación:</b></p>
-                      <%= q.recommendation.html_safe rescue "" %>
-                    <% when "4" %>
-                      <%= pie_chart [["Hombres", "75"],["Mujeres", "25"]], colors: ["#9FD52E", "#666"], stacked: true, width: "1024px"  %>
-                      <p class="text-center aqua-color"><b>Actividad donde participan más los hombres que las mujeres</b></p>
-                      <br>
-                      <p><b>Recomendación:</b></p>
-                      <%= q.recommendation.html_safe rescue "" %>
-                    <% when "5" %>
-                      <%= pie_chart [["Hombres", "100"],["Mujeres", "0"]], colors: ["#9FD52E", "#666"], stacked: true, width: "1024px"  %>
-                      <p class="text-center aqua-color"><b>Actividad exclusiva para hombres</b></p>
-                      <br>
-                      <p><b>Recomendación:</b></p>
-                      <%= q.recommendation.html_safe rescue "" %>
-                    <% else %>
-
-                    <% end %>
-                  <br>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        
-        <!-- Checkbox -->
-        <% elsif questionType_array.include?("Checkbox")  %>
-            <% Question.where(section_id: s.id).order('id ASC').each do |qq| %>
-              <div class="text-center" style="width: 33% !important; display: inline-block; text-align: center; padding: 2rem;">
-              <%= qq.question.html_safe %>
-              <p><b>Respuesta:</b></p>
-                <% Answer.where(question_id: qq.id, counter: params[:counter]).order('id ASC').each do |a| %>
-                  <% if qq.id == 127 %>
-                    <% if a.answer_question == "Confirm" %>
-                      <%= wicked_pdf_image_tag "igualdad2.png", class: "img-fluid answer-icons" %>
-                      <br><br>
-                      <h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-                    <% else %>
-                      <%= wicked_pdf_image_tag "igualdad-gris.png", class: "img-fluid answer-icons gray-img" %>
-                      <br><br>
-                    <h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-                    <% end %>
-                  <% elsif qq.id == 128 %>
-                    <% if a.answer_question == "Confirm" %>
-                      <%= wicked_pdf_image_tag "politico.png", class: "img-fluid answer-icons" %>
-                      <br><br>
-                      <h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-                    <% else %>
-                      <%= wicked_pdf_image_tag "politico-gris.png", class: "img-fluid answer-icons gray-img" %>
-                      <br><br>
-                    <h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-                    <% end %>
-                  <% elsif qq.id == 129 %>
-                    <% if a.answer_question == "Confirm" %>
-                      <%= wicked_pdf_image_tag "mujer.png", class: "img-fluid answer-icons" %>
-                      <br><br>
-                      <h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-                    <% else %>
-                      <%= wicked_pdf_image_tag "mujer-gris.png", class: "img-fluid answer-icons gray-img" %>
-                      <br><br>
-                    <h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-                    <% end %>
-                  <% elsif qq.id == 130 %>
-                    <% if a.answer_question == "Confirm" %>
-                      <%= wicked_pdf_image_tag "dinero-gris.png", class: "img-fluid answer-icons gray-img" %>
-                      <br><br>
-                    <h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-                    <% else %>
-                      <%= wicked_pdf_image_tag "dinero.png", class: "img-fluid answer-icons" %>
-                      <br><br>
-                      <h6 class="text-center"><b>¡Si brinda!</b></h6>
-                    <% end %>
-                  <% elsif qq.id == 131 %>
-                    <% if a.answer_question == "Confirm" %>
-                      <%= wicked_pdf_image_tag "garantia.png", class: "img-fluid answer-icons" %>
-                      <br><br>
-                      <h6 class="text-center"><b>¡Buen trabajo!</b></h6>
-                    <% else %>
-                      <%= wicked_pdf_image_tag "garantia-gris.png", class: "img-fluid answer-icons gray-img" %>
-                      <br><br>
-                    <h6 class="text-center"><b>¡Se necesita mejorar!</b></h6>
-                    <% end %>
-                  <% else %>
-                  <% end %>
-                <br><br>
-                <% end %>
-              </div>
-            <% end %>
-
-        <% else %>
-
-        <% end %>
+          <!-- Results - END -->
 
       <% end %>
-      <!-- Array de secciones - End -->
+      <!-- Section - END -->
+
     <% end %>
+    <!-- Survey - END -->
   </div>
 </div>
-
 <br><br>
 </body>
 </html>

@@ -5,20 +5,22 @@ Rails.application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
   root :to => "home#index"
+
+  get "/home/records/" => "home#records"
+  get "/home/historic/" => "home#historic"
+  get "/home/results/" => "home#results"
+  post "/home/delete" => "home#delete"
+  post "/home/insert_data" =>"home#insert_data"
+
   resources :home do
-    member do
-      post :insert_data
-      get "results"
-      get "records"
-      get "historic"
-    end
     collection do
       get :edit_user
       put :update_user
     end
   end
 
-  get "/home/survey/:id" => "home#show"
+  # :id => survey ID, :did => diagnostic ID
+  get "/home/survey/:id(/:did)" => "home#show"
 
   namespace :admin do
 	  resources :surveys do

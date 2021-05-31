@@ -1,0 +1,123 @@
+<%
+# @type @survey [Survey]
+# @type question [Question]
+# @type section [Section]
+# @type index [Integer]
+# @type visible [Boolean]
+# @type form [FormBuilder]
+
+
+name = "answer_question[#{question.id}]"
+value = answer.nil? ? nil : answer.value
+%>
+<% if !visible %>
+  <tr class="<%= "question#{section.id}" %>">
+    <td colspan="3">
+      <%= hidden_field_tag name, value, id:"checkboxHide#{question.id}" %>
+    </td>
+  </tr>
+<% else %>
+  <tr class="<%= "question#{section.id}" %>">
+    <td width="50" class="text-center"><%= @survey.code %>.<%= index+1 %></td>
+    <td width="600" class="text-justify"><%= question.question.html_safe rescue "" %></td>
+    <td width="120" class="text-center bg-skin">
+
+      <% case question.question_type %>
+      <% when "Número", "Moneda", "Decimal" %>
+        <% value = value.nil? ? 0 : value %>
+        <%= number_field_tag name,
+                             value,
+                             class: "form-control text-center " "input_#{section.id}",
+                             id: "#{question.id}_#{section.id}",
+                             min: '0',
+                             placeholder: 'Especificar...',
+                             readonly: section.is_confirm_or_no_data
+        %>
+
+      <% when "Checkbox No data" %>
+        <%
+          value = value.nil? ? 'Data' : value
+          checked = value === 'No data'
+        %>
+        <%= check_box_tag '', nil, checked, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{question.id}" %>
+        <%= hidden_field_tag name, value, id:"checkboxHide#{question.id}" %>
+
+      <% when "Checkbox" %>
+        <%
+          value = value.nil? ? 'No confirm' : value
+          checked = value === 'Confirm'
+        %>
+        <%= check_box_tag '', nil, checked, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{question.id}", html:{} %>
+        <%= hidden_field_tag name, 'No confirm', id:"checkboxValue#{question.id}" %>
+
+      <% when "Rango de Numeros" %>
+        <%
+          title = "1: Actividad exclusiva para mujeres
+  2: Actividad donde participan más las mujeres que los hombres
+  3: Actividad donde la participación de hombres y mujeres es equitativa (50/50)
+  4: Actividad donde participan más los hombres que las mujeres
+  5: Actividad exclusiva para hombres"
+           options = [
+             { name: 'Exclusiva para mujeres', id: 1 },
+             { name: 'Más mujeres que hombres', id: 2 },
+             { name: 'Equitativa 50/50', id: 3 },
+             { name: 'Más hombres que mujeres', id: 4 },
+             { name: 'Exclusiva para hombres', id: 5 },
+           ]
+
+        %>
+        <% value = value.nil? ? 3 : value %>
+        <div class="text-left" style="min-width: 150px">
+        <% options.each do |item| %>
+            <div>
+              <label class="radio-button-label">
+                <%= radio_button_tag name, item[:id], (value.to_i == item[:id].to_i) %>
+                <%= item[:name] %>
+              </label>
+            </div>
+        <% end %>
+        </div>
+      <% else %>
+        NO se ha asignado
+      <% end %>
+    </td>
+  </tr>
+  <script type="text/javascript">
+      $(document).ready(function(){
+          $("#<%= "checkboxNoData#{question.id}" %>").change(function(){
+              if($(this).prop('checked')){
+                  $("#<%= "checkboxHide#{question.id}" %>").val('No data');
+                  $(".<%= "input_#{section.id}" %>:input").prop("readonly", true);
+                  $(".<%= "input_#{section.id}" %>:input").val('0');
+              }else{
+                  $("#<%= "checkboxHide#{question.id}" %>").val('Data');
+                  $(".<%= "input_#{section.id}" %>:input").prop("readonly", false);
+              }
+          });
+
+          $("#<%= "checkboxConfirm#{question.id}" %>").change(function(){
+              if($(this).prop('checked')){
+                  $("#<%= "checkboxValue#{question.id}" %>").val('Confirm');
+                  $(".<%= "input_#{section.id}" %>:input").prop("readonly", true);
+                  $(".<%= "input_#{section.id}" %>:input").val('0');
+              }else{
+                  $("#<%= "checkboxValue#{question.id}" %>").val('No confirm');
+                  $(".<%= "input_#{section.id}" %>:input").prop("readonly", false);
+              }
+          });
+
+          $("#checkboxConfirm66").change(function(){
+              if($(this).prop('checked')){
+                  $("#section20").hide();
+                  $(".question20").hide();
+                  $(".<%= "input_#{19}" %>:input").val('0');
+              }else{
+                  $("#section20").show();
+                  $(".question20").show();
+              }
+          });
+
+          $(".val").attr('id',"<%= "val#{question.id}" %>");
+      });
+  </script>
+<% end %>

@@ -1,7 +1,13 @@
-<div class="col-md-8 offset-md-2 max">
-  <%= bar_chart data,
-        colors: colors,
-        stacked: true
-  %>
+<%
+  types = ['max', 'normal', 'negativa', 'ideal']
+  render_format = ((local_variables.include?(:render_format) ? render_format : 'html'))
+  cssClass = ((render_format != 'pdf') ? "col-md-8 offset-md-2 max" : "max")
+%>
+<div class="<%= cssClass %>">
+  <% if(render_format == 'pdf') %>
+    <%= bar_chart data, colors: colors, stacked: true, width: "900px" %>
+  <% else %>
+    <%= bar_chart data, colors: colors, stacked: true %>
+  <% end %>
   <br>
 </div>

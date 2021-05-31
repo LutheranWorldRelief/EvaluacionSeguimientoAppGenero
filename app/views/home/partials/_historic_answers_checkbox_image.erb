@@ -1,9 +1,16 @@
-<% cssClass = 'img-fluid answer-icons ' + (confirm ? '' : 'gray-img') %>
-<% message = confirm ? '¡Buen trabajo!' : '¡Se necesita mejorar!' %>
-<% title = confirm ? title_yes : title_no%>
+<%
+  render_format = ((local_variables.include?(:render_format) ? render_format : 'html'))
+  cssClass = 'img-fluid answer-icons ' + (confirm ? '' : 'gray-img')
+  message = confirm ? '¡Buen trabajo!' : '¡Se necesita mejorar!'
+  title = confirm ? title_yes : title_no
+%>
 
 <br>
-<%= image_tag(image, alt:"Lutheran World Relief", class:cssClass, title: title) %>
+<% if render_format == 'pdf' %>
+  <%= wicked_pdf_image_tag image, class:cssClass %>
+<% else %>
+  <%= image_tag(image, alt:"Lutheran World Relief", class:cssClass, title: title) %>
+<% end %>
 <br><br>
 <h6 class="text-center">
   <b><%=message %></b>

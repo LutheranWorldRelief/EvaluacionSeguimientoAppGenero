@@ -10,6 +10,8 @@
 #  user_email      :string
 #  survey          :string
 #  counter         :integer
+#  diagnostic_id   :bigint
+#  survey_id       :bigint
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

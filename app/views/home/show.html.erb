@@ -1,313 +1,66 @@
+<%
+# @type @survey [Survey]
+# @type current_user [User]
+%>
+
 <!-- Header container -->
 <%= render "home/partials/navbar"%>
 
 <!-- Diágnostico -->
 <div class="container" >
-	<div class="text-center">
-		<h4>
-			<br><br>
-			<b><i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;<%= @surveys.name %></b>
-			<br><br>
-		</h4>
-	</div>
-
-	<%= @surveys.indications.html_safe rescue "" %>
-	<br>
-
-	<!-- Listado de secciones -->
-	<%= form_tag insert_data_home_path, id: "survey#{@surveys.id}",  method: :post do %>
-		<div class="col-md-6 offset-md-3 text-center">
-			<%= hidden_field_tag 'user_email', current_user.email %>
-			<%= hidden_field_tag 'survey', @surveys.id %>
-		</div>
-		<br>
-		<table class="table">
-			<tbody>
-				<tr>
-					<th class="bg-aqua white-color survey_header col-12 text-center" colspan="4	"><h4>DIAGNÓSTICO</h4></th>
-				</tr>
-					<% @surveys.sections.order('id ASC').each  do |s| %>
-					<tr id="<%= "section#{s.id}" %>">
-						<td class="col-12 bd-lightblue2 survey_section" colspan="4	"><b><%= s.name %></b></td>
-					</tr>
-						<% s.questions.order('id ASC').each_with_index do |q,index| %>
-							<% if current_user.organization_type == "Exclusiva para mujeres" %>
-								<% if q.discard_question == "Solo cuando la organización sea exclusiva de mujeres" %>
-									<tr class="d-none <%= "question#{s.id}" %>">
-										<td width="50" class="text-center"><%= @surveys.code %>.<%= index+1 %></td>
-										<td width="600" class="text-justify"><%= q.question.html_safe rescue "" %></td>
-										<td width="120" class="text-center bg-skin">
-											<% case q.question_type %>
-											<% when "Número" %>
-												
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Moneda" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox No data" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{q.id}" %>
-
-												<%= hidden_field_tag 'answer_question[]', 'Data', id:"checkboxHide#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{q.id}" %>
-												<%= hidden_field_tag 'answer_question[]', 'No confirm', id:"checkboxValue#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Decimal" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Rango de Numeros" %>								
-												<%= number_field_tag 'answer_question[]', {:value=>''}, class: "form-control text-center input-range", id: "rangevalue#{q.id}", readonly: "readonly" %>
-												<div id="<%= "range#{q.id}" %>" class="range" title="1: Actividad exclusiva para mujeres
-2: Actividad donde participan más las mujeres que los hombres
-3: Actividad donde la participación de hombres y mujeres es equitativa (50/50)
-4: Actividad donde participan más los hombres que las mujeres
-5: Actividad exclusiva para hombres"></div>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-											<% else %>
-												NO se ha asignado
-											<% end %>
-										</td>
-									</tr>
-								<% else %>
-									<tr class="<%= "question#{s.id}" %>">
-										<td width="50" class="text-center"><%= @surveys.code %>.<%= index+1 %></td>
-										<td width="600" class="text-justify"><%= q.question.html_safe rescue "" %></td>
-										<td width="120" class="text-center bg-skin">
-											<% case q.question_type %>
-											<% when "Número" %>
-												
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Moneda" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox No data" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{q.id}" %>
-
-												<%= hidden_field_tag 'answer_question[]', 'Data', id:"checkboxHide#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{q.id}" %>
-												<%= hidden_field_tag 'answer_question[]', 'No confirm', id:"checkboxValue#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Decimal" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Rango de Numeros" %>								
-												<%= number_field_tag 'answer_question[]', {:value=>''}, class: "form-control text-center input-range", id: "rangevalue#{q.id}", readonly: "readonly" %>
-												<div id="<%= "range#{q.id}" %>" class="range" title="1: Actividad exclusiva para mujeres
-2: Actividad donde participan más las mujeres que los hombres
-3: Actividad donde la participación de hombres y mujeres es equitativa (50/50)
-4: Actividad donde participan más los hombres que las mujeres
-5: Actividad exclusiva para hombres"></div>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-											<% else %>
-												NO se ha asignado
-											<% end %>
-										</td>
-									</tr>
-								<% end %>
-							<% elsif current_user.organization_type == "Exclusiva para hombres" %>
-								<% if q.discard_question == "Solo cuando la organización sea exclusiva de hombres" %>
-									<tr class="d-none <%= "question#{s.id}" %>">
-										<td width="50" class="text-center"><%= @surveys.code %>.<%= index+1 %></td>
-										<td width="600" class="text-justify"><%= q.question.html_safe rescue "" %></td>
-										<td width="120" class="text-center bg-skin">
-											<% case q.question_type %>
-											<% when "Número" %>
-												
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Moneda" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox No data" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{q.id}" %>
-
-												<%= hidden_field_tag 'answer_question[]', 'Data', id:"checkboxHide#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{q.id}" %>
-												<%= hidden_field_tag 'answer_question[]', 'No confirm', id:"checkboxValue#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Decimal" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Rango de Numeros" %>								
-												<%= number_field_tag 'answer_question[]', {:value=>''}, class: "form-control text-center input-range", id: "rangevalue#{q.id}", readonly: "readonly" %>
-												<div id="<%= "range#{q.id}" %>" class="range" title="1: Actividad exclusiva para mujeres
-2: Actividad donde participan más las mujeres que los hombres
-3: Actividad donde la participación de hombres y mujeres es equitativa (50/50)
-4: Actividad donde participan más los hombres que las mujeres
-5: Actividad exclusiva para hombres"></div>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-											<% else %>
-												NO se ha asignado
-											<% end %>
-										</td>
-									</tr>
-								<% else %>
-									<tr class="<%= "question#{s.id}" %>">
-										<td width="50" class="text-center"><%= @surveys.code %>.<%= index+1 %></td>
-										<td width="600" class="text-justify"><%= q.question.html_safe rescue "" %></td>
-										<td width="120" class="text-center bg-skin">
-											<% case q.question_type %>
-											<% when "Número" %>
-												
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Moneda" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox No data" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{q.id}" %>
-
-												<%= hidden_field_tag 'answer_question[]', 'Data', id:"checkboxHide#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Checkbox" %>
-												<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{q.id}" %>
-												<%= hidden_field_tag 'answer_question[]', 'No confirm', id:"checkboxValue#{q.id}" %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Decimal" %>
-												<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-
-											<% when "Rango de Numeros" %>								
-												<%= number_field_tag 'answer_question[]', {:value=>''}, class: "form-control text-center input-range", id: "rangevalue#{q.id}", readonly: "readonly" %>
-												<div id="<%= "range#{q.id}" %>" class="range" title="1: Actividad exclusiva para mujeres
-2: Actividad donde participan más las mujeres que los hombres
-3: Actividad donde la participación de hombres y mujeres es equitativa (50/50)
-4: Actividad donde participan más los hombres que las mujeres
-5: Actividad exclusiva para hombres"></div>
-												<%= hidden_field_tag 'question_id[]', q.id %>
-											<% else %>
-												NO se ha asignado
-											<% end %>
-										</td>
-									</tr>
-								<% end %>
-							<% else %>
-								<tr class="<%= "question#{s.id}" %>">
-									<td width="50" class="text-center"><%= @surveys.code %>.<%= index+1 %></td>
-									<td width="600" class="text-justify"><%= q.question.html_safe rescue "" %></td>
-									<td width="120" class="text-center bg-skin">
-										<% case q.question_type %>
-										<% when "Número" %>
-											
-											<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-											<%= hidden_field_tag 'question_id[]', q.id %>
-
-										<% when "Moneda" %>
-											<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-											<%= hidden_field_tag 'question_id[]', q.id %>
-
-										<% when "Checkbox No data" %>
-											<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxNoData#{q.id}" %>
-
-											<%= hidden_field_tag 'answer_question[]', 'Data', id:"checkboxHide#{q.id}" %>
-											<%= hidden_field_tag 'question_id[]', q.id %>
-
-										<% when "Checkbox" %>
-											<%= check_box_tag '', nil, false, class: 'form-control form-control-checkbox text-center', id: "checkboxConfirm#{q.id}" %>
-											<%= hidden_field_tag 'answer_question[]', 'No confirm', id:"checkboxValue#{q.id}" %>
-											<%= hidden_field_tag 'question_id[]', q.id %>
-
-										<% when "Decimal" %>
-											<%= number_field_tag 'answer_question[]', '0', class: "form-control text-center " "input_#{s.id}", id: "#{q.id}_#{s.id}", min: '0', placeholder: 'Especificar...' %>
-											<%= hidden_field_tag 'question_id[]', q.id %>
-
-										<% when "Rango de Numeros" %>								
-											<%= number_field_tag 'answer_question[]', {:value=>''}, class: "form-control text-center input-range", id: "rangevalue#{q.id}", readonly: "readonly" %>
-											<div id="<%= "range#{q.id}" %>" class="range" title="1: Actividad exclusiva para mujeres
-2: Actividad donde participan más las mujeres que los hombres
-3: Actividad donde la participación de hombres y mujeres es equitativa (50/50)
-4: Actividad donde participan más los hombres que las mujeres
-5: Actividad exclusiva para hombres"></div>
-											<%= hidden_field_tag 'question_id[]', q.id %>
-										<% else %>
-											NO se ha asignado
-										<% end %>
-									</td>
-								</tr>
-							<% end %>
-								<script type="text/javascript">
-									$(document).ready(function(){
-										$("#<%= "checkboxNoData#{q.id}" %>").change(function(){
-								     	if($(this).prop('checked')){
-								        $("#<%= "checkboxHide#{q.id}" %>").val('No data');
-								        $(".<%= "input_#{s.id}" %>:input").prop("readonly", true);
-								      	$(".<%= "input_#{s.id}" %>:input").val('0');
-								     	}else{
-								        $("#<%= "checkboxHide#{q.id}" %>").val('Data');
-								        $(".<%= "input_#{s.id}" %>:input").prop("readonly", false);
-								     	}
-										});
-
-										$("#<%= "checkboxConfirm#{q.id}" %>").change(function(){
-								     	if($(this).prop('checked')){
-								        $("#<%= "checkboxValue#{q.id}" %>").val('Confirm');
-								        $(".<%= "input_#{s.id}" %>:input").prop("readonly", true);
-								      	$(".<%= "input_#{s.id}" %>:input").val('0');
-								     	}else{
-								        $("#<%= "checkboxValue#{q.id}" %>").val('No confirm');
-								        $(".<%= "input_#{s.id}" %>:input").prop("readonly", false);
-								     	}
-										});
-										
-										$("#checkboxConfirm66").change(function(){
-											if($(this).prop('checked')){
-								        $("#section20").hide();
-								        $(".question20").hide();
-								        $(".<%= "input_#{19}" %>:input").val('0');
-								     	}else{
-								        $("#section20").show();
-								        $(".question20").show();
-								     	}
-										});	
-
-										$(".val").attr('id',"<%= "val#{q.id}" %>");
-
-										$( "#<%= "range#{q.id}" %>" ).slider({
-								      range: "max",
-								      min: 1,
-								      max: 5,
-								      value: 3,
-								      slide: function( event, ui ) {
-								        $( "#<%= "rangevalue#{q.id}" %>" ).val( ui.value );
-								      }
-								    });
-								    $( "#<%= "rangevalue#{q.id}" %>" ).val( $( "#<%= "range#{q.id}" %>" ).slider( "value" ) );
-									});
-								</script>
-						<% end %>
-					<% end %>
-			</tbody>
-		</table>
-		<br>
-		<div class="col-md-4 offset-md-4 text-center">
-			<%= submit_tag "Ver resultados", class: 'btn btn-primary', disabled: false %>
-		</div>
-	<% end %>
+  <div class="row">
+    <div class="col-lg-12" style="margin-top: 25px; margin-bottom: 25px">
+      <h4>
+        <i class="fas fa-clipboard-list"></i>&nbsp; Encuesta:&nbsp;<%= @survey.name %>
+        <span class="bg-success float-right text-white" style="padding: 5px 10px">
+          <small>
+            Diagnostico: <%= @counter %>
+          </small>
+        </span>
+      </h4>
+    </div>
+    <div class="col-lg-12">
+      <%= @survey.indications.html_safe rescue "" %>
+    </div>
+    <div class="col-lg-12">
+      <!-- Listado de secciones -->
+      <%= form_with url: home_insert_data_path,  method: :post do |form| %>
+        <% if @diagnostic %>
+          <%= hidden_field_tag 'diagnostic_id', @diagnostic.id %>
+        <% end %>
+        <%= hidden_field_tag 'survey_id', @survey.id %>
+        <table class="table">
+          <tbody>
+          <% @survey.sections.order('id ASC').each  do |section| %>
+            <% ans = @answers[section.id] %>
+            <% section.answers_idx = (ans.nil? ? {} : ans.index_by{|a| a.question_id}) %>
+            <%= render partial: "home/partials/show_form_section",
+                       locals: {
+                         section: section,
+                         current_user: current_user,
+                         form: form
+                       } %>
+          <% end %>
+          </tbody>
+        </table>
+        <br/>
+        <div class="col-md-12">
+          <a href="<%= home_index_url %>" class="btn btn-danger">
+            Cancelar
+          </a>
+          <button type="submit" class="btn btn-primary pull-right">
+            <i class="fa fa-save"></i> Guardar y ver resultados
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
 <br><br>
+<style type="text/css">
+    .radio-button-label:hover,
+    .radio-button-label input:hover{
+
+        cursor:pointer
+    }
+</style>

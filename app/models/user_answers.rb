@@ -1,20 +1,16 @@
 class UserAnswers
 
   # constructor
-  def initialize(user_email, survey_id, counter)
-    @user_email = user_email
-    @survey = survey_id
-    @count = counter
-
-    @user = User.where(email: @user_email).last
-    @survey = Survey.find(survey_id)
-    @sections = @survey.sections
-    @answers = Answer.eager_load(:question)
+  def initialize(user_email, survey_id, diagnostic_id)
+    survey = Survey.find(survey_id)
+    sections = survey.sections
+    answers = Answer.eager_load(:question)
                      .where(user_email: user_email,
                             survey: survey_id,
-                            counter: counter).order('answers.id ASC')
+                            diagnostic_id: diagnostic_id)
+                     .order('answers.id ASC')
 
-    @answers_mapped = @answers.group_by do
+    @answers_mapped = answers.group_by do
       |answer| answer.question.section_id
     end
 

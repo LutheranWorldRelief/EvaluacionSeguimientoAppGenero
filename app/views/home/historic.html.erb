@@ -11,21 +11,21 @@
     <div class="col-lg-6 text-right">
       <% if params[:survey].to_i == @last_survey_id %>
           <%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'),
-                      results_home_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ),
+                      home_results_path(survey: params[:survey], user_email: params[:user_email], counter: params[:counter], format: :pdf ),
                       class: "btn bg-orange white-color",
                       title:"Crear PDF de los resultados obtenidos",
                       target: "_blank" %>
-        <% end %>
+      <% end %>
 
-        <%= link_to raw('<i class="fas fa-arrow-circle-left"></i> Regresar'),
-                    records_home_path(survey: params[:survey], user_email: current_user.email),
-                    class: "btn btn-secondary",
-                    title:"Regresar a todos los diagnósticos" %>
+      <%= link_to raw('<i class="fa fa-edit"></i> Editar'),
+                  home_path(id: @survey.id, diagnostic: @diagnostic.id),
+                  class: "btn btn-danger",
+                  title:"Editar valores de la encuesta" %>
 
-        <%= link_to raw('<i class="fas fa-list"></i> Diagnósticos'),
-                    home_index_path,
-                    class: "btn btn-secondary",
-                    title:"Regresar a todos los diagnósticos" %>
+      <%= link_to raw('<i class="fa fa-list"></i> Diagnósticos'),
+                  home_index_path,
+                  class: "btn btn-secondary",
+                  title:"Regresar a todos los diagnósticos" %>
     </div>
   </div>
 </div>
@@ -83,10 +83,9 @@
     <div class="col-md-6 offset-md-3 text-center">
       <% if @survey.id.to_i == @last_survey_id.to_i %>
         <%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'),
-                    results_home_path(
-                      survey: @survey.id,
-                      user_email: @user.email,
-                      counter: @counter,
+                    home_results_path(
+                      survey_id: @survey.id,
+                      diagnostic_id: @diagnostic.id,
                       format: :pdf
                     ),
                     class: "btn bg-orange white-color",

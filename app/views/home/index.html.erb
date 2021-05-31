@@ -2,15 +2,7 @@
 <%= render "home/partials/navbar"%>
 
 <% unless user_signed_in? %>
-<div class="container">
-  <div class="row">
-    <div class="col-md-4 offset-md-4 text-center">
-      <br>
-      <%= link_to( image_tag("lwr-logotag.png", alt:"Lutheran World Relief", class:"img-fluid"), home_index_path) %>
-      <br><br>
-    </div>
-  </div>
-</div>
+  <%= render "home/partials/index_guest" %>
 <% end %>
 <div class="container">
   <br><br>
@@ -22,43 +14,7 @@
 </div>
 
 <% if user_signed_in? %>
-	<div class="container">
-		<div class="row">
-			<% first_survey = Survey.where(status: true).first.id %>
-
-			<%- @surveys.each_with_index do |s, index | %>
-				<% answer_exist = Answer.where(user_email: current_user.email, survey: s.id).group_by(&:counter) %>
-				<div class="col-md-6 survey-item hvr-pulse">
-			    <div class="row no-gutters border overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-ligthgray">
-			    	<div class="col-md-4 d-none d-lg-block text-center" style="padding: 25px;">
-			    		<%= image_tag("survey.png", alt:"Icono de Diagnóstico", class:"img-fluid") %>
-			        <!--<h1 class="survey-img darkblue-color text-right"><i class="fas fa-clipboard-list"></i></h1>-->
-			      </div>
-			      <div class="col-md-8 p-4 d-flex flex-column position-static">
-			        <strong class="d-inline-block mb-2 darkblue-color"><%= index+1 %> <%= s.code %>	</strong>
-			        <h4 class="mb-0"><%= s.name %></h4>
-			        <br>
-			        <div class="text-muted">
-			        	<% if first_survey.to_i == s.id %>
-
-			        		<%= link_to raw('<i class="fas fa-pen-alt"></i>&nbsp;&nbsp;Comenzar Diagnóstico'), home_path(s.id),  class:"btn btn-primary" %>
-
-			        		<% unless answer_exist.blank? %>
-			        			<%= link_to raw('<i class="fas fa-eye"></i>'), records_home_path(s.id, survey: s.id, user_email: current_user.email),  class:"btn btn-sucess btn-sm", title: "Ver resultados anteriores" %>
-			        		<% end %>
-
-			        	<% else %>
-			        		<% unless answer_exist.blank? %>
-			        			<%= link_to raw('<i class="fas fa-eye"></i>&nbsp;&nbsp;Resultados anteriores'), records_home_path(s.id, survey: s.id, user_email: current_user.email),  class:"btn btn-sucess btn-sm", title: "Ver resultados anteriores"  %>
-			        		<% end %>
-			        	<% end %>
-			        </div>
-			      </div>
-			    </div>
-			  </div>
-		  <% end %>
-		</div>
-	</div>
+  <%= render "home/partials/index_sign_in" %>
 <% else %>
 	<div class="container diagnostics-items">
 		<div class="row">
