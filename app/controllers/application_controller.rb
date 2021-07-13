@@ -27,6 +27,10 @@ class ApplicationController < ActionController::Base
 
     diagnostic = find_diagnostic(id)
 
+    if !diagnostic
+      return nil
+    end
+
     if !current_user.is_admin and diagnostic.user_id != current_user.id
       exception_403_not_allowed ("No tiene permisos para ver este diagnóstico")
     end
