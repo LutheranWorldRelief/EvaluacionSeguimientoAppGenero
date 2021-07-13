@@ -5,7 +5,7 @@ services:
     env_file:
       - .env.pg
     ports:
-      - "5436:5432"
+      - "5440:5432"
     volumes:
       - ./storage:/tmp/backup
       - corus_genero_db:/var/lib/postgresql/data
