@@ -11,17 +11,22 @@ class HomeController < ApplicationController
   def show
     survey_id = params[:id]
     diagnostic_id = params[:diagnostic]
+
     @survey = find_survey(survey_id)
     @diagnostic = find_diagnostic_secure(diagnostic_id)
+
     @answers = @diagnostic.nil? ? {} :
                  Answer.joins(:section)
                        .where(diagnostic_id: diagnostic_id, survey_id: survey_id)
                        .group_by { |ans| ans.question.section_id }
 
     @counter = @diagnostic.nil? ? Diagnostic.counter_next(current_user.id) : @diagnostic.counter
+
     respond_to do |format|
       format.html
-      format.pdf { render template: 'home/pdf', pdf: "Encuesta - #{@survey.created_at.strftime("%d-%m-%Y")}" }
+      format.pdf { render template: 'home/pdf',
+                          pdf: "Encuesta - #{@survey.created_at.strftime("%d-%m-%Y")}"
+      }
     end
   end
 
@@ -123,6 +128,7 @@ class HomeController < ApplicationController
     @user = current_user
     @survey = find_survey(params[:survey_id])
     @diagnostic = find_diagnostic(params[:diagnostic_id])
+    @surveys_count = Survey.where(status: true).count
 
     @user_answers = UserAnswers.new(@user.email, @survey.id, @diagnostic.id)
 

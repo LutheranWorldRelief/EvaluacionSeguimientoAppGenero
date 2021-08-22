@@ -24,7 +24,7 @@
 
       <%= link_to raw('<i class="fa fa-list"></i> Diagnósticos'),
                   home_index_path,
-                  class: "btn btn-secondary",
+                  class: "btn btn-primary",
                   title:"Regresar a todos los diagnósticos" %>
     </div>
   </div>
@@ -91,6 +91,34 @@
                     class: "btn bg-orange white-color",
                     title:"Crear PDF de los resultados obtenidos",
                     target: "_blank" %>
+      <% end %>
+
+      <% if !@diagnostic.nil? %>
+      <%
+
+        next_survey_index  = @diagnostic.next_survey_index(@survey.id)
+        next_survey_id = @diagnostic.next_survey_id(@survey.id)
+        next_survey = next_survey_id ? Survey.find(next_survey_id) : nil
+        has_survey = @diagnostic.has_survey_id(next_survey_id)
+
+        url = has_survey ?
+              home_historic_path(survey_id: next_survey_id, diagnostic_id: @diagnostic.id) :
+              (
+                  next_survey.nil? ?
+                  nil :
+                  home_path(id: next_survey_id, diagnostic: @diagnostic.id)
+              )
+      %>
+        <% if !next_survey.nil? %>
+        <a href="<%= url %>" class="btn btn-lg btn-primary">
+          <% if has_survey %>
+            Ver encuesta:
+          <% else %>
+            Crear encuesta:
+          <% end %>
+          <%= next_survey_index + 1 %>. <%= next_survey.name %>
+        </a>
+        <% end %>
       <% end %>
     </div>
   </div>

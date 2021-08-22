@@ -3,7 +3,6 @@ class UserAnswers
   # constructor
   def initialize(user_email, survey_id, diagnostic_id)
     survey = Survey.find(survey_id)
-    sections = survey.sections
     answers = Answer.eager_load(:question)
                      .where(user_email: user_email,
                             survey: survey_id,
@@ -143,8 +142,8 @@ class UserAnswers
 
   def barchart_gab_avg_real(porc_avg, porc_gab)
     [
-      ['BRECHA PROMEDIO (%)', porc_avg],
-      ['BRECHA OBTENIDA (%)', porc_gab]
+      ['PORCENTAJE META'    , porc_avg],
+      ['PORCENTAJE OBTENIDO', porc_gab]
     ]
   end
 

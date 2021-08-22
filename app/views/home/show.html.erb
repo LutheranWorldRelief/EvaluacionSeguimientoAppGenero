@@ -1,6 +1,16 @@
 <%
 # @type @survey [Survey]
+# @type @diagnostic [Diagnostic]
 # @type current_user [User]
+
+first_survey_id_to_create = Diagnostic.first_survey_id_to_create
+can_fill_survey = (@diagnostic.nil? &&  first_survey_id_to_create == @survey.id) ||
+                  (!@diagnostic.nil? && (
+                      @diagnostic.has_survey_id(@survey.id) ||
+                      @diagnostic.can_create_survey_id(@survey.id
+                    ))
+                  )
+
 %>
 
 <!-- Header container -->
@@ -17,10 +27,20 @@
         </span>
       </h4>
     </div>
+
+    <% if can_fill_survey %>
+
     <div class="col-lg-12">
       <%= @survey.indications.html_safe rescue "" %>
     </div>
     <div class="col-lg-12">
+
+      <div class="col-md-12 text-right" style="padding-bottom: 20px">
+        <a href="<%= home_index_url %>" class="btn btn-danger">
+          Cancelar
+        </a>
+      </div>
+
       <!-- Listado de secciones -->
       <%= form_with url: home_insert_data_path,  method: :post do |form| %>
         <% if @diagnostic %>
@@ -52,13 +72,37 @@
         </div>
       <% end %>
     </div>
+
+    <% else %>
+    <%
+      survey_id = @diagnostic.nil? ? first_survey_id_to_create : @diagnostic.next_survey_id_to_create
+      index = @diagnostic.nil? ? 1 : @diagnostic.next_survey_index_to_create + 1
+      @survey = Survey.find(survey_id)
+      url = home_path(id: @survey.id, diagnostic: (@diagnostic.nil? ? nil : @diagnostic.id))
+    %>
+    <div class="col-md-offset-3 col-md-6">
+      <h5>
+        <div>Esta encuesta aún no puede ser creada.</div>
+        <div>Por favor proporcionar información de la encuesta:</div>
+      </h5>
+      <br>
+      <div>
+        <a href="<%= url %>" class="btn btn-lg btn-primary">
+          <%= index %>. <%= @survey.name %>
+        </a>
+        <a href="<%= home_index_url %>" class="btn btn-lg btn-danger">
+          Cancelar
+        </a>
+      </div>
+    </div>
+
+    <% end %>
   </div>
 </div>
 <br><br>
 <style type="text/css">
     .radio-button-label:hover,
     .radio-button-label input:hover{
-
         cursor:pointer
     }
 </style>

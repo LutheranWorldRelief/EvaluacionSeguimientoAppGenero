@@ -47,6 +47,21 @@ class ApplicationController < ActionController::Base
   end
 
   def exception_403_not_allowed(message)
-    render json:{ message: message}, status: :unauthorized and return
+    exception(:unauthorized, message)
+  end
+
+  def exception_404_not_found(message)
+    exception(:not_found, message)
+  end
+
+  def exception_400_bad_request(message)
+    exception(:bad_request, message)
+  end
+
+  def exception(status, message)
+    respond_to do |format|
+      format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => status }
+      format.json { render :json => { message: message}, :status => status }
+    end
   end
 end
