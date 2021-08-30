@@ -58,8 +58,8 @@ ActiveRecord::Schema.define(version: 2021_08_28_225221) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.boolean "archived"
-    t.datetime "archived_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "archived_date"
+    t.integer "archived_user_id"
     t.index ["user_id"], name: "index_diagnostics_on_user_id"
   end
 

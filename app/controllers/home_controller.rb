@@ -169,6 +169,29 @@ class HomeController < ApplicationController
                      .group_by(&:counter)
   end
 
+  def archived
+    diagnostic_id = params[:diagnostic]
+    @user = current_user
+    @diagnostic = find_diagnostic_secure(diagnostic_id)
+    if !@diagnostic.nil?
+      @diagnostic.archived_date = Time.now
+      @diagnostic.archived_user_id = current_user.id
+      redirect_to home_path, notice: "Diagnóstico id:#{@diagnostic.id} marcado como archivado"
+    end
+    redirect_to home_path, notice: "No se logró archivar el diagnóstico"
+  end
+
+  def unarchived
+    diagnostic_id = params[:diagnostic]
+    @diagnostic = find_diagnostic_secure(diagnostic_id)
+    if !@diagnostic.nil?
+      @diagnostic.archived_date = null
+      @diagnostic.archived_user_id = current_user.id
+      redirect_to home_path, notice: "Diagnóstico id:#{@diagnostic.id} marcado como archivado"
+    end
+    redirect_to home_path, notice: "No se logró desarchivar el diagnóstico"
+  end
+
   private
 
   def set_surveys

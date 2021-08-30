@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get "/home/results/" => "home#results"
   post "/home/delete" => "home#delete"
   post "/home/insert_data" =>"home#insert_data"
+  post "/home/archived" => "home#archived"
+  post "/home/unarchived" => "home#unarchived"
 
   resources :home do
     collection do
