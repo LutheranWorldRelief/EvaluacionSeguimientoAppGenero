@@ -2,12 +2,14 @@
 #
 # Table name: diagnostics
 #
-#  id         :bigint           not null, primary key
-#  user_email :string
-#  counter    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  user_id    :bigint
+#  id            :bigint           not null, primary key
+#  user_email    :string
+#  counter       :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  user_id       :bigint
+#  archived      :boolean
+#  archived_date :datetime
 #
 
 class Diagnostic < ApplicationRecord
