@@ -170,26 +170,32 @@ class HomeController < ApplicationController
   end
 
   def archived
-    diagnostic_id = params[:diagnostic]
+    diagnostic_id = params[:diagnostic_id]
     @user = current_user
     @diagnostic = find_diagnostic_secure(diagnostic_id)
-    if !@diagnostic.nil?
-      @diagnostic.archived_date = Time.now
-      @diagnostic.archived_user_id = current_user.id
-      redirect_to home_path, notice: "Diagnóstico id:#{@diagnostic.id} marcado como archivado"
+
+    if @diagnostic.nil?
+      redirect_to home_index_path, notice: "No se logró archivar el diagnóstico" and return
     end
-    redirect_to home_path, notice: "No se logró archivar el diagnóstico"
+
+    date = @diagnostic.created_at.strftime("%d %b %Y")
+    @diagnostic.archived_date = Time.now
+    @diagnostic.archived_user_id = current_user.id
+    @diagnostic.save
+    redirect_to home_index_path, notice: "Diagnóstico del #{date} marcado como ARCHIVADO"
   end
 
   def unarchived
-    diagnostic_id = params[:diagnostic]
+    diagnostic_id = params[:diagnostic_id]
     @diagnostic = find_diagnostic_secure(diagnostic_id)
-    if !@diagnostic.nil?
-      @diagnostic.archived_date = null
-      @diagnostic.archived_user_id = current_user.id
-      redirect_to home_path, notice: "Diagnóstico id:#{@diagnostic.id} marcado como archivado"
+    if @diagnostic.nil?
+      redirect_to home_index_path, notice: "No se logró desarchivar el diagnóstico" and return
     end
-    redirect_to home_path, notice: "No se logró desarchivar el diagnóstico"
+
+    date = @diagnostic.created_at.strftime("%d %b %Y")
+    @diagnostic.archived_date = nil
+    @diagnostic.save
+    redirect_to home_index_path, notice: "Diagnóstico del #{date} marcado como NO ARCHIVADO"
   end
 
   private

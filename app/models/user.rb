@@ -24,7 +24,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :diagnostics, -> { order 'created_at DESC' }
+  has_many :diagnostics, -> { where(:archived_date => nil).order('created_at DESC') }
+  has_many :diagnostics_archived, -> { where.not(:archived_date => nil).order('created_at DESC') }, foreign_key: :user_id, class_name: 'Diagnostic'
+  has_many :diagnostics_all, -> { order('created_at DESC') }, foreign_key: :user_id, class_name: 'Diagnostic'
   has_one :admin, primary_key: 'email', foreign_key: 'email'
 
   def is_admin

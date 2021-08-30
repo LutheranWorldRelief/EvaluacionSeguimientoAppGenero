@@ -1,4 +1,5 @@
 <%
+  # @type current_user [User]
   # @type @surveys [Survey]
 %>
 <div class="container">
@@ -9,7 +10,7 @@
       </a>
     </div>
   </div>
-  <div class="row">
+  <div class="row" id="diagnostics">
     <%
     # @type diagnostic [Diagnostic]
     current_user.diagnostics.each do |diagnostic|
@@ -47,6 +48,93 @@
         </div>
         <div class="col-md-2 d-none d-lg-block text-center" style="padding: 10px 25px;">
           <%= image_tag("survey.png", alt:"Icono de Diagnóstico", class:"img-fluid") %>
+          <div>
+            <%= link_to "Archivar", home_archived_url(diagnostic_id: diagnostic.id), method: :post %>
+          </div>
+        </div>
+
+        <div class="col-md-10 p-4 d-flex flex-column position-static">
+          <div class="row">
+            <% @surveys.each_with_index do |s, index| %>
+              <div class="col-lg-6 mb-4">
+
+                <%
+                  cssClasses = "btn btn-danger btn-sm mr-2"
+                  url = home_path(id: s.id, diagnostic: diagnostic.id)
+                  icon = "fa-plus"
+                  if diagnostic.has_survey(s)
+                    cssClasses.gsub!("btn-danger", "btn-primary")
+                    icon = "fa-eye"
+                    url = home_historic_path(survey_id: s.id, diagnostic_id: diagnostic.id)
+                  end
+                %>
+
+                <a href="<%= url %>"
+                   class="<%= cssClasses %>"
+                   title="Ver resultados anteriores">
+                  <i class="fas fa-fw <%= icon %>"></i>
+                </a>
+                <span><%= index+1 %> :: <%= s.code %> <%= s.name %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+  <div class="row" style="padding-bottom: 20px;">
+    <div class="col-lg-12">
+      <a class="btn btn-primary" href="javascript:void(0)" onclick="ToggleArchivedDiagnostic()">
+        <i class="fa fa-eye"></i> Mostrar/Ocultar archivados
+      </a>
+    </div>
+  </div>
+  <div class="row" id="diagnostics_archived" style="display: none; padding-bottom: 10px;">
+    <div class="col-lg-12">
+      <h3>Diagnosticos Archivados</h3>
+    </div>
+    <%
+    # @type diagnostic [Diagnostic]
+    current_user.diagnostics_archived.each do |diagnostic|
+    %>
+    <div class="col-lg-12">
+      <div class="row no-gutters border overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-ligthgray">
+        <div class="col-lg-12 d-lg-block" style="padding: 10px 25px;">
+          <h5>
+            <b>Diagnóstico <%= diagnostic.created_at.strftime("%d %b %Y") %></b>
+
+            <% if current_user.is_admin %>
+              <button type="button"
+                      onclick="delete_diagnostic(<%= diagnostic.id %>)"
+                      class="btn btn-danger float-right"
+                      style="padding: 5px 10px">
+                <small>
+                  <i class="fas fa-fw fa-trash"></i>
+                </small>
+              </button>
+              <%= form_with url: home_delete_url, :method => 'POST', html: { id: "form_delete_diagnostic_#{diagnostic.id}", class: 'float-right' } do %>
+                <%= hidden_field_tag 'diagnostic_id', diagnostic.id %>
+              <% end %>
+            <% end %>
+
+            <% if diagnostic.is_complete(@surveys.length) %>
+              <span class="bg-success float-right text-white" style="padding: 5px 10px">
+                <small>
+                  <i class="fa fa-check"></i> Completado
+                </small>
+              </span>
+            <% end %>
+
+          </h5>
+
+        </div>
+        <div class="col-md-2 d-none d-lg-block text-center" style="padding: 10px 25px;">
+          <%= image_tag("survey.png", alt:"Icono de Diagnóstico", class:"img-fluid") %>
+          <div>
+            <%= link_to "Desarchivar", home_unarchived_url(diagnostic_id: diagnostic.id), method: :post %>
+          </div>
         </div>
 
         <div class="col-md-10 p-4 d-flex flex-column position-static">
@@ -80,15 +168,23 @@
     <% end %>
   </div>
 </div>
-<% if current_user.is_admin %>
 <script type="text/javascript" charset="utf-8">
-    function delete_diagnostic(diagnostic_id){
-        let result = confirm('Desea eliminar este diagnóstico?')
-        if (result) {
-            let formId = `form_delete_diagnostic_${diagnostic_id}`;
-            let form = document.getElementById(formId);
-            form.submit();
-        }
-    }
-</script>
+
+<% if current_user.is_admin %>
+  function delete_diagnostic(diagnostic_id){
+      let result = confirm('Desea eliminar este diagnóstico?')
+      if (result) {
+          let formId = `form_delete_diagnostic_${diagnostic_id}`;
+          let form = document.getElementById(formId);
+          form.submit();
+      }
+  }
 <% end %>
+
+  function ToggleArchivedDiagnostic(){
+      let divDiagnosticArchived = document.getElementById('diagnostics_archived');
+      let display = divDiagnosticArchived.style.display;
+      divDiagnosticArchived.style.display = display == "none" ? null : "none";
+
+  }
+</script>
