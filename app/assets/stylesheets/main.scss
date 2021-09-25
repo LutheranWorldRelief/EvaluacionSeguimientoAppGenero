@@ -11,8 +11,8 @@
 	.survey_header { text-transform: uppercase !important; }
 	.survey_section { text-transform: uppercase !important; }
 	.answer-icons { width: 100px; }
-	.gray-img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: gray !important; }
-	.div-gray-img > img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: gray !important; }
+	.gray-img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: grayscale(1) !important; }
+	.div-gray-img > img { -webkit-filter: grayscale(1) !important; -moz-filter: grayscale(1); -ms-filter: grayscale(1); -o-filter: grayscale(1); filter: grayscale(1) !important; }
 	.bg-surveys { background-image: url(asset_path("LWRBanner.jpg")); background-repeat: no-repeat; background-size: 100%; height: 500px; }
 
 // Background colors and font colors
