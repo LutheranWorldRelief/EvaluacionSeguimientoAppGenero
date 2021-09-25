@@ -96,7 +96,7 @@ gem 'unicorn', '~> 5.5', '>= 5.5.1'
   gem 'ckeditor', '~> 4.2'
   # Carrierwave upload media
   gem 'carrierwave'
-  gem 'mini_magick'
+  # gem 'mini_magick'
   # Countries
   gem 'country_select', '~> 4.0'
   gem 'intl-tel-input-rails'
