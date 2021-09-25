@@ -88,7 +88,7 @@ gem 'unicorn', '~> 5.5', '>= 5.5.1'
   # Daru
   gem 'daru-view'
   # Chartkick Grafics
-  gem 'chartkick', '~> 2.2.0'
+  gem 'chartkick', '~> 3.4.0'
   gem 'highcharts-rails'
   # Seed show data
   gem 'seed_dump'
