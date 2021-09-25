@@ -70,7 +70,7 @@ gem 'unicorn', '~> 5.5', '>= 5.5.1'
   # JQuery
   gem 'jquery-rails'
   # Bootstrap 4
-  gem 'bootstrap', '~> 4.1.3'
+  gem 'bootstrap', '~> 4.3.1'
   # Devise Authentication
   gem 'devise', '~> 4.6', '>= 4.6.2'
   # Simple Form
