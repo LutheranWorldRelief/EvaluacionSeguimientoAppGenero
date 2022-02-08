@@ -27,9 +27,14 @@ class Diagnostic < ApplicationRecord
   end
 
   def self.counter_next(user_id)
-    self.where({ user_id: user_id })
+    max = self.where({ user_id: user_id })
         .maximum(:counter)
-        .next
+
+    if(max)
+      max.next
+    else
+      1
+    end
   end
 
   def complete_porc(surveys_total)
