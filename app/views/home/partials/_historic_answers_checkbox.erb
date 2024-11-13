@@ -1,8 +1,7 @@
 <% render_format = ((local_variables.include?(:render_format) ? render_format : 'html')) %>
 <% section.questions.order('id ASC').each_with_index  do |question| %>
   <div class="col-md-2 lpi-item text-center">
-    <small class="question-item"><%= question.question.html_safe %></small>
-    <p><b>Resultado:</b></p>
+
     <% answer = user_answers.by_section_id_question_id(section.id, question.id) %>
     <%= render partial: "home/partials/historic_answers_checkbox_image",
                    locals: {

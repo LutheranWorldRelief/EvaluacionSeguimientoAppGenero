@@ -7,11 +7,24 @@
 
 <br>
 <% if render_format == 'pdf' %>
-  <%= wicked_pdf_image_tag "images/#{image}", class: cssClass %>
+  <div class="row" style="margin-bottom: 20px">
+    <div class="col-3">
+      <%= wicked_pdf_image_tag "images/#{image}", class: cssClass %>
+    </div>
+    <div class="col-9">
+      <p><%= question.question.html_safe %></p>
+      <h6 class="text-center">
+        <b><%=message %></b>
+      </h6>
+    </div>
+  </div>
+
 <% else %>
+  <small class="question-item"><%= question.question.html_safe %></small>
+  <p><b>Resultado:</b></p>
   <%= image_tag(image, alt:"Lutheran World Relief", class:cssClass, title: title) %>
+  <br><br>
+  <h6 class="text-center">
+    <b><%=message %></b>
+  </h6>
 <% end %>
-<br><br>
-<h6 class="text-center">
-  <b><%=message %></b>
-</h6>
