@@ -7,7 +7,7 @@
 
 <br>
 <% if render_format == 'pdf' %>
-  <%= wicked_pdf_image_tag image, class:cssClass %>
+  <%= wicked_pdf_image_tag "images/#{image}", class: cssClass %>
 <% else %>
   <%= image_tag(image, alt:"Lutheran World Relief", class:cssClass, title: title) %>
 <% end %>
