@@ -118,7 +118,14 @@ class HomeController < ApplicationController
                print_media_type: true,
                disable_javascript: false,
                javascript_delay: 3000,
-               viewport_size: '1280x1024'
+               viewport_size: '1280x1024',
+               show_as_html: false,
+               margin: {
+                 top: 20,
+                 bottom: 20,
+                 left: 15,
+                 right: 15
+               }
       }
     end
   end
