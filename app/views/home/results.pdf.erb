@@ -119,7 +119,10 @@
 <div class="container">
   <div style="margin-left: 2rem; margin-right: 2rem;">
     <!-- Survey - BEGIN -->
-    <% Survey.where(status: true).order('id ASC').each_with_index  do |survey, index_of| %>
+    <% surveys = Survey.where(status: true).order('id ASC') %>
+    <% total_surveys = surveys.count %>
+
+    <% surveys.each_with_index  do |survey, index_of| %>
 
       <h4 class="text-center" style="text-transform: uppercase; padding: 2rem;">
         <b><%= index_of+1 %>. <%= survey.name.html_safe rescue "" %></b>
@@ -162,6 +165,9 @@
 
       <% end %>
       <!-- Section - END -->
+      <% if index_of < total_surveys - 1 %>
+        <div style="page-break-before: always;"></div>
+      <% end %>
 
     <% end %>
     <!-- Survey - END -->
