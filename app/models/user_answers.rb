@@ -25,11 +25,11 @@ class UserAnswers
   end
 
   def barchar_colors
-    ["#9FD52E", "#666"]
+    ["#009ED1", "#FF6C00"]
   end
 
   def piechart_colors
-    ["#9FD52E", "#666"]
+    ["#009ED1", "#FF6C00"]
   end
 
   def by_section_id_question_id(section_id, question_id)
