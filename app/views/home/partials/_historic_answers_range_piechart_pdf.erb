@@ -1,0 +1,11 @@
+<div style="margin-bottom: 70px;margin-top:30px; page-break-inside: avoid; ">
+  <div style="flex:3">
+    <h5 style="text-align: left"><b><%= title %></b></h5>
+    <p class="darkblue-color"><%= description %></p>
+    <%= pie_chart data, colors: colors, stacked: true %>
+    <p style="font-size: 12pt; text-align: justify;">
+      <span class="aqua-color"><b>Recomendación:</b></span>
+      <%= recommendation.html_safe %>
+    </p>
+  </div>
+</div>

@@ -121,11 +121,22 @@ class HomeController < ApplicationController
                viewport_size: '1280x1024',
                show_as_html: false,
                margin: {
-                 top: 20,
+                 top: 50,
                  bottom: 20,
                  left: 15,
-                 right: 15
-               }
+                 right: 15,
+               },
+               footer: {
+                 right: 'Página [page] de [toPage]',
+                 font_size:6
+               },
+               header: {
+                 html: {
+                   template: 'layouts/pdf_header.html.erb'
+                 },
+                 spacing:00
+               },
+               enable_local_file_access: true
       }
     end
   end

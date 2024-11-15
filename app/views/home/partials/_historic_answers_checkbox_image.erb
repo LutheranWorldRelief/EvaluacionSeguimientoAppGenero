@@ -1,30 +1,43 @@
 <%
   render_format = ((local_variables.include?(:render_format) ? render_format : 'html'))
   cssClass = 'img-fluid answer-icons ' + (confirm ? '' : 'gray-img')
+  styleTxt = 'width: 100px; '+ (confirm ? '' : 'opacity: 0.3; ')
   message = confirm ? '¡Buen trabajo!' : '¡Se necesita mejorar!'
   title = confirm ? title_yes : title_no
 %>
 
 <br>
 <% if render_format == 'pdf' %>
-  <div class="row" style="margin-bottom: 20px">
+  <div class="row" style="margin-bottom: 10px">
+    <table>
+      <tr>
+        <td class="text-center" style="width: 260px">
+          <div>
+          <%= wicked_pdf_image_tag "images/#{image}", style:styleTxt %>
+          </div>
+        </td>
+        <td class="text-center" style="width: 760px">
+          <p class="text-center"><%= question.question.html_safe %></p>
+          <h6 class="text-center">
+            <b><%= message %></b>
+          </h6>
+        </td>
+      </tr>
+    </table>
     <div class="col-3">
-      <%= wicked_pdf_image_tag "images/#{image}", class: cssClass %>
+
     </div>
-    <div class="col-9">
-      <p><%= question.question.html_safe %></p>
-      <h6 class="text-center">
-        <b><%=message %></b>
-      </h6>
+    <div class="col-4">
+
     </div>
   </div>
 
 <% else %>
   <small class="question-item"><%= question.question.html_safe %></small>
   <p><b>Resultado:</b></p>
-  <%= image_tag(image, alt:"Lutheran World Relief", class:cssClass, title: title) %>
+  <%= image_tag(image, alt: "Lutheran World Relief", class: cssClass, title: title) %>
   <br><br>
   <h6 class="text-center">
-    <b><%=message %></b>
+    <b><%= message %></b>
   </h6>
 <% end %>

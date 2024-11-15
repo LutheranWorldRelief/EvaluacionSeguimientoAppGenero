@@ -4,12 +4,17 @@
   <meta charset="utf-8" />
   <title>Resultados</title>
   
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%#= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload'%>
   <%= javascript_include_tag "http://www.google.com/jsapi"%>
   <%= wicked_pdf_javascript_include_tag "chartkick"%>
   <%= stylesheet_link_tag "http://google.com google.pdf" %>
-  <%= wicked_pdf_stylesheet_link_tag "pdf.css" %>
+  <%= wicked_pdf_stylesheet_link_tag "pdf.scss" %>
+  <!-- En tu vista PDF -->
+  <%= javascript_include_tag 'application' %>
+  <%= wicked_pdf_javascript_include_tag 'application' %>
+  <%= wicked_pdf_stylesheet_link_tag 'application' %>
+
 
   <style type="text/css">
 
@@ -54,18 +59,16 @@
 </head>
 <body>  
 
+<!--<div class="container">-->
+<!--  <div class="row">-->
+<!--    <div class="col-4 offset-4 text-center">-->
+      <%#= wicked_pdf_image_tag "images/lwr-logotag.png", class: "img-fluid" %>
+<!--      <br><br>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 <div class="container">
-  <div class="row">
-    <div class="col-4 offset-4 text-center">
-      <%= wicked_pdf_image_tag "images/lwr-logotag.png", class: "img-fluid" %>
-      <br><br>
-    </div>
-  </div>
-</div>
-<div class="container">
-  <h4 class="text-center"><b>CAJA DE HERRAMIENTAS DE GÉNERO</b></h4>
-  <h6 class="text-center"><i>¡Construyendo comunidades equitativas y prósperas!</i></h6>
-  <br>
+
   <h5 class="text-center" style="color: #000;">
     <br>
     <b>RESULTADOS OBTENIDOS</b>
@@ -117,7 +120,7 @@
 
 
 <div class="container">
-  <div style="margin-left: 2rem; margin-right: 2rem;">
+  <div class="row" style="margin-left: 2rem; margin-right: 2rem;">
     <!-- Survey - BEGIN -->
     <% surveys = Survey.where(status: true).order('id ASC') %>
     <% total_surveys = surveys.count %>
@@ -145,7 +148,7 @@
 
             <!-- Rango de Numeros -->
           <% elsif section.is_range %>
-            <%= render partial: "home/partials/historic_answers_range",
+            <%= render partial: "home/partials/historic_answers_range_pdf",
                        locals: {
                          section: section,
                          user_answers: user_answers,

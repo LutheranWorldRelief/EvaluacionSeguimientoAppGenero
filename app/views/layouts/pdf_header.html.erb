@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+      body {
+          font-size: 10px;
+          margin: 0;
+          padding: 0;
+      }
+
+      .container {
+          width: 100%;
+          border-collapse: collapse; /* Elimina los espacios entre bordes */
+          table-layout: fixed; /* Asegura que las celdas tengan tamaños iguales */
+      }
+
+      .container td {
+          text-align: center; /* Centra el texto en cada celda */
+          vertical-align: top; /* Alinea verticalmente el contenido al centro */
+
+      }
+
+
+      .left {
+
+      }
+
+      .center {
+          text-align: center;
+      }
+
+      .right {
+
+      }
+
+  </style>
+</head>
+<body>
+<table class="container">
+  <tr>
+    <td style=" text-align: left;">Organización: <%= @user.organization_name %></td>
+    <td class="center">
+      <%= wicked_pdf_image_tag "images/lwr-logotag.png", style: "width:250px;" %>
+
+    </td>
+    <td style=" text-align: right;">
+      <% @date = @diagnostic.created_at %>
+      Fecha: <%= @date.strftime("%d-%m-%Y") %>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong style="font-size: 1.8em" class="text-center"><b>CAJA DE HERRAMIENTAS DE GÉNERO</b></strong>
+      <br>
+      <p style="font-size: 1.3em" class="text-center"><i>¡Construyendo comunidades equitativas y prósperas!</i></p>
+      <br>
+    </td>
+  </tr>
+</table>
+
+
+
+</body>
+</html>
