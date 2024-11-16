@@ -51,9 +51,10 @@
           <div>
             <%= link_to "Archivar", home_archived_url(diagnostic_id: diagnostic.id), method: :post %>
           </div>
+
         </div>
 
-        <div class="col-md-10 p-4 d-flex flex-column position-static">
+        <div class="col-md-8 p-4 d-flex flex-column position-static">
           <div class="row">
             <% @surveys.each_with_index do |s, index| %>
               <div class="col-lg-6 mb-4">
@@ -78,6 +79,17 @@
               </div>
             <% end %>
           </div>
+        </div>
+
+        <div class="col-md-2">
+          <%= link_to raw('<i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar PDF'),
+                      home_results_path(
+                        diagnostic_id: diagnostic.id,
+                        format: :pdf
+                      ),
+                      class: "btn bg-success white-color",
+                      title:"Crear PDF de los resultados obtenidos",
+                      target: "_blank" %>
         </div>
       </div>
     </div>
